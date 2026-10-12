@@ -22,6 +22,11 @@ const server = http.createServer((req, res) => {
     return res.end(JSON.stringify({ status: "online", activeRooms: rooms.size, rooms: roomSummaries }));
   }
 
+  if (reqUrl === "/favicon.ico") {
+    res.writeHead(204);
+    return res.end();
+  }
+
   const filePath = path.join(__dirname, reqUrl);
   fs.readFile(filePath, (err, data) => {
     if (err) {
