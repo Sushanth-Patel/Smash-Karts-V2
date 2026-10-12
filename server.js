@@ -104,6 +104,11 @@ class Room {
     this.inGame = true;
     this.timer = this.matchDuration;
 
+    // Automatic Arena Rotation every round
+    const MAP_IDS = ["stadium", "canyon", "lava"];
+    const curIdx = MAP_IDS.indexOf(this.mapId);
+    this.mapId = MAP_IDS[(curIdx + 1) % MAP_IDS.length];
+
     // Reset players
     this.players.forEach(p => {
       p.hp = 100;

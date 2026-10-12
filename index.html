@@ -224,57 +224,96 @@
       font-family: inherit;
     }
 
-    /* Map Selection Strip */
-    .map-select-box {
-      background: rgba(30, 41, 59, 0.5);
-      border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 12px;
+    /* Automatic Arena Rotation Card */
+    .auto-arena-card {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 0 15px rgba(245, 158, 11, 0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
       text-align: left;
     }
-    .map-select-title {
-      font-size: 11px;
+    .auto-arena-icon {
+      font-size: 26px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .auto-arena-details {
+      flex: 1;
+    }
+    .auto-arena-tag {
+      font-size: 10px;
       font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #94a3b8;
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .map-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .map-card {
-      background: rgba(15, 23, 42, 0.7);
-      border: 2px solid var(--glass-border);
-      border-radius: 12px;
-      padding: 8px 6px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 12px;
-      font-weight: 800;
-      color: #cbd5e1;
-      transition: all 0.15s;
-    }
-    .map-card .icon {
-      font-size: 22px;
-      display: block;
-      margin-bottom: 4px;
-    }
-    .map-card:hover {
-      background: rgba(30, 41, 59, 0.85);
-      color: #fff;
-    }
-    .map-card.active {
-      border-color: #fbbf24;
-      background: rgba(245, 158, 11, 0.15);
+      letter-spacing: 1.2px;
       color: #fbbf24;
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
-      transform: scale(1.03);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulseGlow 1.5s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 4px #10b981; }
+      50% { transform: scale(1.5); opacity: 0.5; box-shadow: 0 0 10px #10b981; }
+    }
+    .auto-arena-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #fff;
+      margin-top: 2px;
+    }
+    .auto-arena-sub {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    /* Speed Lines Canvas */
+    #speedLinesCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 2;
+      display: none;
+    }
+
+    /* Low HP Warning Vignette */
+    #damageVignette {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3;
+      box-shadow: inset 0 0 60px rgba(239, 68, 68, 0.7);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #damageVignette.active {
+      opacity: 1;
+      animation: pulseDamage 0.9s infinite alternate;
+    }
+    @keyframes pulseDamage {
+      from { box-shadow: inset 0 0 35px rgba(239, 68, 68, 0.5); }
+      to { box-shadow: inset 0 0 90px rgba(239, 68, 68, 0.9); }
     }
 
     /* Dialog Components */
@@ -832,6 +871,8 @@
 <body>
   <div id="gameContainer">
     <canvas id="gameCanvas"></canvas>
+    <canvas id="speedLinesCanvas"></canvas>
+    <div id="damageVignette"></div>
   </div>
 
   <!-- HUD In-Game Display -->
@@ -919,22 +960,16 @@
         <input type="text" id="usernameInput" maxlength="14" value="SpeedRacer" placeholder="Enter nickname..." />
       </div>
 
-      <!-- Battle Map Selection Strip -->
-      <div class="map-select-box">
-        <div class="map-select-title">
-          <span>Choose Arena Map</span>
-          <span id="selectedMapLabel" style="color:#fbbf24;">Neon Stadium</span>
-        </div>
-        <div class="map-cards" id="menuMapSelector">
-          <div class="map-card active" data-map="stadium">
-            <span class="icon">🏟️</span> Stadium
+      <!-- Automatic Arena Rotation Badge -->
+      <div class="auto-arena-card">
+        <div class="auto-arena-icon" id="autoArenaIcon">🏟️</div>
+        <div class="auto-arena-details">
+          <div class="auto-arena-tag">
+            <span class="pulse-dot"></span>
+            <span>AUTO-ROTATING ARENAS</span>
           </div>
-          <div class="map-card" data-map="canyon">
-            <span class="icon">🏜️</span> Canyon
-          </div>
-          <div class="map-card" data-map="lava">
-            <span class="icon">🌋</span> Magma Pit
-          </div>
+          <div class="auto-arena-title" id="autoArenaName">Neon Stadium</div>
+          <div class="auto-arena-sub">Arenas rotate every match automatically</div>
         </div>
       </div>
 
@@ -995,15 +1030,15 @@
           <button id="copyRoomCodeBtn" class="copy-btn">Copy Code</button>
         </div>
 
-        <div class="map-select-box" style="margin-bottom:12px;">
-          <div class="map-select-title">
-            <span>Match Arena</span>
-            <span id="mpMapLabel" style="color:#fbbf24;">Neon Stadium</span>
-          </div>
-          <div class="map-cards" id="lobbyMapSelector">
-            <div class="map-card active" data-map="stadium"><span class="icon">🏟️</span> Stadium</div>
-            <div class="map-card" data-map="canyon"><span class="icon">🏜️</span> Canyon</div>
-            <div class="map-card" data-map="lava"><span class="icon">🌋</span> Magma Pit</div>
+        <div class="auto-arena-card" style="margin-bottom:12px;">
+          <div class="auto-arena-icon" id="lobbyArenaIcon">🏟️</div>
+          <div class="auto-arena-details">
+            <div class="auto-arena-tag">
+              <span class="pulse-dot"></span>
+              <span>BATTLEGROUND ASSIGNED</span>
+            </div>
+            <div class="auto-arena-title" id="lobbyArenaName">Neon Stadium</div>
+            <div class="auto-arena-sub">Automatically synced across all players</div>
           </div>
         </div>
 
@@ -1442,6 +1477,67 @@
         osc.start();
         osc.stop(this.ctx.currentTime + 0.42);
       }
+
+      playHop() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(340, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(740, this.ctx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.14);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.15);
+      }
+
+      playLanding() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(140, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(45, this.ctx.currentTime + 0.16);
+        gain.gain.setValueAtTime(0.26, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.18);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.2);
+      }
+
+      playJump() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(280, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(960, this.ctx.currentTime + 0.28);
+        gain.gain.setValueAtTime(0.24, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.3);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.32);
+      }
+
+      playFreeze() {
+        if (!this.ctx) return;
+        [880, 1174, 1568].forEach((freq, idx) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.04);
+          gain.gain.setValueAtTime(0.15, this.ctx.currentTime + idx * 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.04 + 0.25);
+          osc.connect(gain);
+          gain.connect(this.sfxGain);
+          osc.start(this.ctx.currentTime + idx * 0.04);
+          osc.stop(this.ctx.currentTime + idx * 0.04 + 0.28);
+        });
+      }
     }
 
     const sound = new AudioEngine();
@@ -1509,9 +1605,12 @@
     const WEAPONS = {
       ROCKET: { id: "ROCKET", name: "Homing Rocket", icon: "🚀", ammo: 1, damage: 65, speed: 68 },
       MACHINE_GUN: { id: "MACHINE_GUN", name: "Gatling Gun", icon: "🔫", ammo: 24, damage: 9, rate: 0.1 },
-      SPIKE_MINE: { id: "SPIKE_MINE", name: "Spike Mine", icon: "💣", ammo: 1, damage: 85 },
+      SPIKE_MINE: { id: "SPIKE_MINE", name: "Naval Spike Mine", icon: "💣", ammo: 1, damage: 85 },
       NITRO_STAR: { id: "NITRO_STAR", name: "Invincible Nitro", icon: "⭐", ammo: 1, duration: 4.5 },
-      BOUNCING_BOMB: { id: "BOUNCING_BOMB", name: "Cannon Bomb", icon: "🏐", ammo: 1, damage: 75, speed: 48 }
+      BOUNCING_BOMB: { id: "BOUNCING_BOMB", name: "Cannon Bomb", icon: "🏐", ammo: 1, damage: 75, speed: 48 },
+      SPIKY_GO_ROUND: { id: "SPIKY_GO_ROUND", name: "Spiky-Go-Round", icon: "⚙️", ammo: 1, duration: 6.5 },
+      SNOWBALL: { id: "SNOWBALL", name: "Snowball Blaster", icon: "❄️", ammo: 2, speed: 62 },
+      TRIPLE_ROCKET: { id: "TRIPLE_ROCKET", name: "Triple Rockets", icon: "🚀³", ammo: 1, damage: 55, speed: 68 }
     };
     const WEAPON_KEYS = Object.keys(WEAPONS);
 
@@ -1559,6 +1658,7 @@
     const obstacles = [];
     const boostPads = [];
     const hazardZones = [];
+    const jumpRamps = [];
     let currentMapId = config.data.selectedMap || "stadium";
 
     function loadMap(mapId) {
@@ -1580,6 +1680,7 @@
       obstacles.length = 0;
       boostPads.length = 0;
       hazardZones.length = 0;
+      jumpRamps.length = 0;
 
       const cv = document.createElement("canvas");
       cv.width = 512; cv.height = 512;
@@ -1741,6 +1842,42 @@
         pad.position.set(b.x, 0.05, b.z);
         arenaGroup.add(pad);
         boostPads.push({ x: b.x, z: b.z });
+      });
+
+      // 4 High-Octane 3D Jump Ramps
+      const rampDefs = [
+        { x: -28, z: -18, rotY: 0.5 },
+        { x: 28, z: 18, rotY: Math.PI + 0.5 },
+        { x: -18, z: 28, rotY: -0.5 },
+        { x: 18, z: -28, rotY: Math.PI - 0.5 }
+      ];
+
+      const rampMat = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.4, metalness: 0.6 });
+      const rampBorderMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+
+      rampDefs.forEach(r => {
+        const rampGroup = new THREE.Group();
+        rampGroup.position.set(r.x, 0, r.z);
+        rampGroup.rotation.y = r.rotY;
+
+        const wedge = new THREE.Mesh(new THREE.BoxGeometry(6, 1.8, 8), rampMat);
+        wedge.position.set(0, 0.9, 0);
+        wedge.rotation.x = -0.18;
+        wedge.castShadow = true;
+        rampGroup.add(wedge);
+
+        const borderL = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.0, 8.2), rampBorderMat);
+        borderL.position.set(-3, 1.0, 0);
+        borderL.rotation.x = -0.18;
+        rampGroup.add(borderL);
+
+        const borderR = new THREE.Mesh(new THREE.BoxGeometry(0.35, 2.0, 8.2), rampBorderMat);
+        borderR.position.set(3, 1.0, 0);
+        borderR.rotation.x = -0.18;
+        rampGroup.add(borderR);
+
+        arenaGroup.add(rampGroup);
+        jumpRamps.push({ x: r.x, z: r.z, radius: 4.8 });
       });
 
       document.getElementById("gameModeLabel").textContent = mapConf.name;
@@ -2102,6 +2239,57 @@
       shield.visible = false;
       group.add(shield);
 
+      // Ice Cube enclosure for Freeze Snowball powerup
+      const iceCube = new THREE.Mesh(
+        new THREE.BoxGeometry(2.7, 2.5, 3.4),
+        new THREE.MeshStandardMaterial({
+          color: 0x93c5fd,
+          roughness: 0.1,
+          metalness: 0.1,
+          transparent: true,
+          opacity: 0.72
+        })
+      );
+      iceCube.position.y = 1.0;
+      iceCube.visible = false;
+      group.add(iceCube);
+
+      // Spiky-Go-Round orbiting group
+      const spikyGroup = new THREE.Group();
+      spikyGroup.position.y = 0.8;
+      const spikyBalls = [];
+      const spkGeo = new THREE.SphereGeometry(0.42, 10, 10);
+      const spkMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.3 });
+      const pinGeo = new THREE.ConeGeometry(0.12, 0.35, 6);
+      const pinMat = new THREE.MeshStandardMaterial({ color: 0xdc2626 });
+
+      for (let i = 0; i < 3; i++) {
+        const ball = new THREE.Group();
+        const sphereMesh = new THREE.Mesh(spkGeo, spkMat);
+        ball.add(sphereMesh);
+        for (let j = 0; j < 6; j++) {
+          const pin = new THREE.Mesh(pinGeo, pinMat);
+          pin.rotation.z = (j * Math.PI) / 3;
+          pin.position.set(Math.sin((j * Math.PI) / 3) * 0.42, Math.cos((j * Math.PI) / 3) * 0.42, 0);
+          ball.add(pin);
+        }
+        spikyGroup.add(ball);
+        spikyBalls.push(ball);
+      }
+      spikyGroup.visible = false;
+      group.add(spikyGroup);
+
+      // Exhaust Pipes
+      const exhaustMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.3 });
+      const exGeo = new THREE.CylinderGeometry(0.12, 0.12, 0.45, 8);
+      exGeo.rotateX(Math.PI / 2);
+      const exL = new THREE.Mesh(exGeo, exhaustMat);
+      exL.position.set(-0.45, 0.45, -1.35);
+      group.add(exL);
+      const exR = new THREE.Mesh(exGeo, exhaustMat);
+      exR.position.set(0.45, 0.45, -1.35);
+      group.add(exR);
+
       const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.4, 18);
       wheelGeo.rotateZ(Math.PI / 2);
       const rimGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.42, 12);
@@ -2131,7 +2319,7 @@
       const overhead = createOverheadPlate(name);
       group.add(overhead.sprite);
 
-      return { group, bodyMat, wheels, steerGroups, shield, hatGroup, overhead };
+      return { group, bodyMat, wheels, steerGroups, shield, hatGroup, overhead, iceCube, spikyGroup, spikyBalls };
     }
 
     /* ==========================================================================
@@ -2167,6 +2355,14 @@
         this.respawnTimer = 0;
         this.isDead = false;
 
+        this.y = 0;
+        this.vy = 0;
+        this.pitch = 0;
+        this.roll = 0;
+        this.freezeTimer = 0;
+        this.spikyTimer = 0;
+        this.boostTimer = 0;
+
         this.currentWeapon = null;
         this.weaponAmmo = 0;
         this.weaponCooldown = 0;
@@ -2184,13 +2380,34 @@
       }
 
       canCollectWeapon() {
-        return !this.isDead && !this.currentWeapon && !this.isRollingWeapon && this.nitroTimer <= 0;
+        return !this.isDead && !this.currentWeapon && !this.isRollingWeapon && this.nitroTimer <= 0 && this.spikyTimer <= 0;
+      }
+
+      jumpHop() {
+        if (this.isDead || this.y > 0.15 || this.freezeTimer > 0) return;
+        this.vy = 7.5;
+        sound.playHop();
+        spawnSmokePuff(this.group.position.x, 0.2, this.group.position.z, 0xffffff);
+      }
+
+      freeze(duration = 2.4) {
+        if (this.isDead || this.invulnerableTimer > 0 || this.nitroTimer > 0) return;
+        this.freezeTimer = duration;
+        this.speed = 0;
+        if (this.meshData && this.meshData.iceCube) this.meshData.iceCube.visible = true;
       }
 
       respawn() {
         this.hp = 100;
         this.isDead = false;
         this.speed = 0;
+        this.y = 0;
+        this.vy = 0;
+        this.pitch = 0;
+        this.roll = 0;
+        this.freezeTimer = 0;
+        this.spikyTimer = 0;
+        this.boostTimer = 0;
         this.currentWeapon = null;
         this.weaponAmmo = 0;
         this.isRollingWeapon = false;
@@ -2206,6 +2423,8 @@
         this.group.visible = true;
 
         if (this.meshData.shield) this.meshData.shield.visible = true;
+        if (this.meshData.iceCube) this.meshData.iceCube.visible = false;
+        if (this.meshData.spikyGroup) this.meshData.spikyGroup.visible = false;
         if (this.meshData.overhead) this.meshData.overhead.update(this.hp);
       }
 
@@ -2341,6 +2560,23 @@
           projectiles.push(new RocketProjectile(spawnPos, forward, this));
           sound.playRocket();
           this.weaponAmmo--;
+        } else if (this.currentWeapon.id === "TRIPLE_ROCKET") {
+          const angles = [-0.28, 0, 0.28];
+          angles.forEach(ang => {
+            const rotDir = forward.clone().applyAxisAngle(new THREE.Vector3(0, 1, 0), ang);
+            projectiles.push(new RocketProjectile(spawnPos, rotDir, this));
+          });
+          sound.playRocket();
+          this.weaponAmmo--;
+        } else if (this.currentWeapon.id === "SNOWBALL") {
+          projectiles.push(new SnowballProjectile(spawnPos, forward, this));
+          sound.playRocket();
+          this.weaponAmmo--;
+        } else if (this.currentWeapon.id === "SPIKY_GO_ROUND") {
+          this.spikyTimer = this.currentWeapon.duration;
+          if (this.meshData.spikyGroup) this.meshData.spikyGroup.visible = true;
+          sound.playTurbo();
+          this.weaponAmmo--;
         } else if (this.currentWeapon.id === "MACHINE_GUN") {
           projectiles.push(new BulletProjectile(spawnPos, forward, this));
           sound.playMachineGun();
@@ -2396,17 +2632,35 @@
           return;
         }
 
+        // Frozen by Snowball Blaster
+        if (this.freezeTimer > 0) {
+          this.freezeTimer -= dt;
+          this.speed = 0;
+          if (this.meshData.iceCube) {
+            this.meshData.iceCube.visible = true;
+            this.meshData.iceCube.rotation.y += dt * 0.5;
+          }
+          if (Math.random() < 0.3) {
+            spawnSmokePuff(this.group.position.x, 1.0, this.group.position.z, 0xbae6fd);
+          }
+          return;
+        } else {
+          if (this.meshData.iceCube) this.meshData.iceCube.visible = false;
+        }
+
         if (this.invulnerableTimer > 0) {
           this.invulnerableTimer -= dt;
           if (this.meshData.shield) {
             this.meshData.shield.visible = true;
+            this.meshData.shield.material.color.setHex(0x38bdf8);
             this.meshData.shield.rotation.y += dt * 3;
           }
         } else if (this.nitroTimer > 0) {
           this.nitroTimer -= dt;
           if (this.meshData.shield) {
             this.meshData.shield.visible = true;
-            this.meshData.shield.material.color.setHex(0xf59e0b);
+            const hue = (performance.now() * 0.002) % 1;
+            this.meshData.shield.material.color.setHSL(hue, 1.0, 0.6);
             this.meshData.shield.rotation.y += dt * 8;
           }
         } else {
@@ -2418,15 +2672,21 @@
         let accel = 26;
         let effectiveMaxSpeed = this.maxSpeed;
 
+        if (this.boostTimer > 0) {
+          this.boostTimer -= dt;
+          effectiveMaxSpeed = 52;
+          accel = 50;
+        }
+
         if (this.nitroTimer > 0) {
-          effectiveMaxSpeed = 50;
-          accel = 45;
-          if (Math.random() < 0.6) {
+          effectiveMaxSpeed = 52;
+          accel = 50;
+          if (Math.random() < 0.65) {
             const backPos = this.group.position.clone().addScaledVector(
               new THREE.Vector3(Math.sin(this.heading), 0, Math.cos(this.heading)),
               -1.8
             );
-            spawnExplosionParticles(backPos.x, 0.6, backPos.z, 0xf59e0b, 2);
+            spawnExplosionParticles(backPos.x, this.y + 0.6, backPos.z, 0xf59e0b, 3);
           }
         }
 
@@ -2439,14 +2699,17 @@
         this.isDrifting = !!input.drift;
         if (this.isDrifting && Math.abs(this.speed) > 12) {
           this.driftTime += dt;
-          if (Math.random() < 0.4) spawnSmokePuff(this.group.position.x, 0.4, this.group.position.z, 0x94a3b8);
-          // Spawn skid marks behind rear wheels
+          if (Math.random() < 0.45) spawnSmokePuff(this.group.position.x, this.y + 0.35, this.group.position.z, 0x94a3b8);
+          if (this.driftTime > 0.8 && Math.random() < 0.3) {
+            spawnExplosionParticles(this.group.position.x, this.y + 0.35, this.group.position.z, 0x06b6d4, 2);
+          }
           spawnSkidMark(this.group.position.x, this.group.position.z, this.heading);
         } else {
           if (this.driftTime > 1.2) {
-            this.speed += 12;
+            this.speed += 14;
+            this.boostTimer = 1.2;
             sound.playTurbo();
-            spawnExplosionParticles(this.group.position.x, 0.6, this.group.position.z, 0x06b6d4, 12);
+            spawnExplosionParticles(this.group.position.x, this.y + 0.5, this.group.position.z, 0x06b6d4, 14);
           }
           this.driftTime = 0;
         }
@@ -2461,36 +2724,124 @@
         const forward = new THREE.Vector3(Math.sin(this.heading), 0, Math.cos(this.heading));
         this.group.position.addScaledVector(forward, this.speed * dt);
 
+        // 3D Jump Ramps Launch
+        jumpRamps.forEach(ramp => {
+          if (Math.hypot(this.group.position.x - ramp.x, this.group.position.z - ramp.z) < ramp.radius) {
+            if (this.y <= 0.35 && Math.abs(this.speed) > 10) {
+              this.vy = 18.5 + (Math.abs(this.speed) / this.maxSpeed) * 8.0;
+              sound.playJump();
+              spawnExplosionParticles(this.group.position.x, this.y + 0.6, this.group.position.z, 0xf59e0b, 12);
+            }
+          }
+        });
+
+        // Jump Hop on input
+        if (input.jump && this.y <= 0.05) {
+          this.jumpHop();
+        }
+
+        // 3D Vertical Physics & Gravity
+        if (this.y > 0 || this.vy > 0) {
+          this.vy -= 34 * dt;
+          this.y += this.vy * dt;
+          if (this.y <= 0) {
+            this.y = 0;
+            if (this.vy < -7) {
+              sound.playLanding();
+              spawnSmokePuff(this.group.position.x, 0.2, this.group.position.z, 0xd1d5db);
+              if (!this.isBot && !this.isRemote) triggerScreenShake(0.25);
+            }
+            this.vy = 0;
+          }
+        }
+        this.group.position.y = this.y;
+
         this.handleObstacleCollisions();
 
         // Speed Boost Strips
         boostPads.forEach(pad => {
           if (Math.hypot(this.group.position.x - pad.x, this.group.position.z - pad.z) < 3.2) {
-            this.speed = 46;
+            this.speed = 48;
+            this.boostTimer = 1.8;
             sound.playTurbo();
-            spawnExplosionParticles(this.group.position.x, 0.6, this.group.position.z, 0x06b6d4, 8);
+            spawnExplosionParticles(this.group.position.x, this.y + 0.5, this.group.position.z, 0x06b6d4, 10);
           }
         });
 
         // Lava Hazards
         hazardZones.forEach(hz => {
           if (Math.hypot(this.group.position.x - hz.x, this.group.position.z - hz.z) < hz.radius) {
-            this.takeDamage(15 * dt, null);
+            this.takeDamage(18 * dt, null);
             this.speed *= 0.85;
             if (Math.random() < 0.3) {
-              spawnExplosionParticles(this.group.position.x, 0.5, this.group.position.z, 0xff4500, 2);
+              spawnExplosionParticles(this.group.position.x, this.y + 0.5, this.group.position.z, 0xff4500, 2);
             }
           }
         });
 
+        // Spiky-Go-Round Active Spin & Collision Damage
+        if (this.spikyTimer > 0) {
+          this.spikyTimer -= dt;
+          if (this.meshData.spikyGroup) {
+            this.meshData.spikyGroup.visible = true;
+            this.meshData.spikyGroup.rotation.y += dt * 8.5;
+            const r = 3.6;
+            this.meshData.spikyBalls.forEach((b, idx) => {
+              const ang = (idx * Math.PI * 2) / 3;
+              b.position.set(Math.cos(ang) * r, 0, Math.sin(ang) * r);
+            });
+          }
+
+          for (const other of combatants) {
+            if (other !== this && !other.isDead && other.invulnerableTimer <= 0) {
+              if (this.group.position.distanceTo(other.group.position) < 4.4) {
+                other.takeDamage(35 * dt * 4, this);
+                spawnExplosionParticles(other.group.position.x, other.y + 1.0, other.group.position.z, 0xef4444, 4);
+              }
+            }
+          }
+        } else {
+          if (this.meshData.spikyGroup) this.meshData.spikyGroup.visible = false;
+        }
+
+        // Low HP Engine Smoke & Fire Feedback
+        if (this.hp < 35 && !this.isDead && Math.random() < 0.45) {
+          const exPos = this.group.position.clone().addScaledVector(forward, -1.3);
+          spawnSmokePuff(exPos.x, this.y + 0.75, exPos.z, 0x1e293b);
+          if (Math.random() < 0.25) {
+            spawnExplosionParticles(exPos.x, this.y + 0.6, exPos.z, 0xf59e0b, 2);
+          }
+        }
+
+        // Dynamic 3D Suspension Pitch & Roll Tilt
+        const targetPitch = this.y > 0.1 ? -Math.atan2(this.vy, Math.abs(this.speed) + 8) * 0.65 : -(input.throttle || 0) * 0.06;
+        this.pitch += (targetPitch - this.pitch) * Math.min(1, dt * 10);
+        this.roll = -this.steer * 0.20 * speedRatio;
+
+        this.group.rotation.x = this.pitch;
         this.group.rotation.y = this.heading;
-        this.group.rotation.z = -this.steer * 0.12 * speedRatio;
+        this.group.rotation.z = this.roll;
 
         const steerAngle = this.steer * 0.48;
         for (const sg of this.meshData.steerGroups) sg.rotation.y = steerAngle;
 
         this.wheelSpin += this.speed * dt * 2.2;
         for (const w of this.meshData.wheels) w.rotation.x = this.wheelSpin;
+
+        // Local Player HUD & Screen FX
+        if (!this.isBot && !this.isRemote) {
+          const dmgEl = document.getElementById("damageVignette");
+          if (dmgEl) {
+            if (this.hp < 35 && !this.isDead) dmgEl.classList.add("active");
+            else dmgEl.classList.remove("active");
+          }
+
+          const spdEl = document.getElementById("speedLinesOverlay");
+          if (spdEl) {
+            if (this.nitroTimer > 0 || this.boostTimer > 0 || Math.abs(this.speed) > 38) spdEl.classList.add("active");
+            else spdEl.classList.remove("active");
+          }
+        }
       }
 
       handleObstacleCollisions() {
@@ -2845,6 +3196,65 @@
         sound.playExplosion();
         spawnExplosionParticles(this.mesh.position.x, 1.0, this.mesh.position.z, 0xf59e0b, 30);
         scene.remove(this.mesh);
+      }
+    }
+
+    // 5. Snowball Blaster Projectile with Frost Freeze Core
+    class SnowballProjectile {
+      constructor(pos, dir, owner) {
+        this.owner = owner;
+        this.dir = dir.clone().normalize();
+        this.speed = WEAPONS.SNOWBALL.speed;
+        this.life = 2.2;
+
+        const group = new THREE.Group();
+        group.position.copy(pos);
+
+        const sphere = new THREE.Mesh(
+          new THREE.DodecahedronGeometry(0.55, 1),
+          new THREE.MeshStandardMaterial({ color: 0xe0f2fe, roughness: 0.15, metalness: 0.1 })
+        );
+        group.add(sphere);
+
+        const glow = new THREE.Mesh(
+          new THREE.SphereGeometry(0.72, 8, 8),
+          new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.4 })
+        );
+        group.add(glow);
+
+        scene.add(group);
+        this.mesh = group;
+      }
+
+      update(dt) {
+        this.life -= dt;
+        if (this.life <= 0) { scene.remove(this.mesh); return false; }
+        this.mesh.position.addScaledVector(this.dir, this.speed * dt);
+        this.mesh.rotation.x += dt * 8;
+        this.mesh.rotation.y += dt * 6;
+
+        if (Math.random() < 0.5) {
+          spawnSmokePuff(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z, 0xbae6fd);
+        }
+
+        for (const c of combatants) {
+          if (c !== this.owner && !c.isDead && c.invulnerableTimer <= 0) {
+            if (this.mesh.position.distanceTo(c.group.position) < 2.5) {
+              c.freeze(2.4);
+              c.takeDamage(25, this.owner);
+              sound.playFreeze();
+              spawnExplosionParticles(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z, 0x38bdf8, 20);
+              scene.remove(this.mesh);
+              return false;
+            }
+          }
+        }
+
+        if (Math.abs(this.mesh.position.x) > ARENA_BOUNDS || Math.abs(this.mesh.position.z) > ARENA_BOUNDS) {
+          scene.remove(this.mesh);
+          return false;
+        }
+        return true;
       }
     }
 
@@ -3273,6 +3683,8 @@
       document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
       document.getElementById("hud").classList.remove("hidden");
 
+      // Auto rotate arena every match (User does not choose map)
+      rotateToNextMap();
       loadMap(config.data.selectedMap || "stadium");
       populateMatchCombatants();
 
@@ -3343,7 +3755,7 @@
       const nextIdx = (idx + 1) % MAP_KEYS.length;
       config.data.selectedMap = MAP_KEYS[nextIdx];
       config.save();
-      updateMapUISelections();
+      updateAutoArenaUI();
     }
 
     /* ==========================================================================
@@ -3364,7 +3776,8 @@
       }
 
       if (e.code === config.data.keybindings.fire && gameState === "playing") {
-        player.fireWeapon();
+        if (player.currentWeapon) player.fireWeapon();
+        else player.jumpHop();
       }
     });
 
@@ -3450,31 +3863,29 @@
       });
     });
 
-    function updateMapUISelections() {
+    const MAP_ICONS = {
+      stadium: "🏟️",
+      canyon: "🏜️",
+      lava: "🌋"
+    };
+
+    function updateAutoArenaUI() {
       const cur = config.data.selectedMap || "stadium";
-      document.querySelectorAll(".map-card").forEach(c => {
-        if (c.getAttribute("data-map") === cur) c.classList.add("active");
-        else c.classList.remove("active");
-      });
-      const name = MAP_CONFIGS[cur] ? MAP_CONFIGS[cur].name : "Neon Stadium";
-      document.getElementById("selectedMapLabel").textContent = name;
-      document.getElementById("mpMapLabel").textContent = name;
+      const conf = MAP_CONFIGS[cur] || MAP_CONFIGS.stadium;
+      const icon = MAP_ICONS[cur] || "🏟️";
+
+      const mIcon = document.getElementById("autoArenaIcon");
+      const mName = document.getElementById("autoArenaName");
+      if (mIcon) mIcon.textContent = icon;
+      if (mName) mName.textContent = conf.name;
+
+      const lIcon = document.getElementById("lobbyArenaIcon");
+      const lName = document.getElementById("lobbyArenaName");
+      if (lIcon) lIcon.textContent = icon;
+      if (lName) lName.textContent = conf.name;
     }
 
-    document.querySelectorAll(".map-card").forEach(card => {
-      card.addEventListener("click", () => {
-        const mapKey = card.getAttribute("data-map");
-        config.data.selectedMap = mapKey;
-        config.save();
-        updateMapUISelections();
-
-        if (net.ws && net.ws.readyState === WebSocket.OPEN && net.isHost) {
-          net.send({ type: "CHANGE_MAP", mapId: mapKey });
-        }
-      });
-    });
-
-    updateMapUISelections();
+    updateAutoArenaUI();
 
     function setupChips(containerId, configKey) {
       document.querySelectorAll(`#${containerId} .chip-btn`).forEach(chip => {
@@ -3742,7 +4153,51 @@
       }
 
       updateParticles(dt);
+      renderSpeedLines();
       renderer.render(scene, camera);
+    }
+
+    const speedLinesCanvas = document.getElementById("speedLinesCanvas");
+    const slCtx = speedLinesCanvas ? speedLinesCanvas.getContext("2d") : null;
+    if (speedLinesCanvas) {
+      speedLinesCanvas.width = window.innerWidth;
+      speedLinesCanvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      if (speedLinesCanvas) {
+        speedLinesCanvas.width = window.innerWidth;
+        speedLinesCanvas.height = window.innerHeight;
+      }
+    });
+
+    function renderSpeedLines() {
+      if (!slCtx || !player || (player.nitroTimer <= 0 && player.boostTimer <= 0 && Math.abs(player.speed) <= 38)) {
+        if (speedLinesCanvas && speedLinesCanvas.style.display !== "none") {
+          speedLinesCanvas.style.display = "none";
+        }
+        return;
+      }
+      speedLinesCanvas.style.display = "block";
+      slCtx.clearRect(0, 0, speedLinesCanvas.width, speedLinesCanvas.height);
+      const cx = speedLinesCanvas.width / 2;
+      const cy = speedLinesCanvas.height / 2;
+      const numLines = 28;
+      slCtx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+      slCtx.lineWidth = 2.5;
+
+      for (let i = 0; i < numLines; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const innerR = 120 + Math.random() * 120;
+        const outerR = Math.max(cx, cy) * 1.35;
+        slCtx.beginPath();
+        slCtx.moveTo(cx + Math.cos(ang) * innerR, cy + Math.sin(ang) * innerR);
+        slCtx.lineTo(cx + Math.cos(ang) * outerR, cy + Math.sin(ang) * outerR);
+        slCtx.stroke();
+      }
     }
 
     animate();
