@@ -2,7 +2,7 @@
 
 Real-time 3D kart combat for the browser, built with Three.js, Node.js, and WebSocket. Race, collect power-ups, and battle other players in a fast arena game with offline AI support.
 
-[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Sushanth-Patel/Smash-Karts-V2)
+[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Sushanth-Patel/Turbo-Kart)
 
 ## Overview
 
@@ -50,8 +50,8 @@ Turbo Smash Karts 3D supports both solo play and real-time multiplayer. The brow
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/Sushanth-Patel/Smash-Karts-V2.git
-cd Smash-Karts-V2
+git clone https://github.com/Sushanth-Patel/Turbo-Kart.git
+cd Turbo-Kart
 npm install
 ```
 
@@ -72,7 +72,7 @@ The game can also be opened directly from `index.html` for solo play, but runnin
 Render is the recommended deployment target because the game server needs a long-running Node.js process for WebSocket connections.
 
 1. Create a new Web Service on [Render](https://render.com).
-2. Connect the `Sushanth-Patel/Smash-Karts-V2` repository.
+2. Connect the `Sushanth-Patel/Turbo-Kart` repository.
 3. Use the included `render.yaml`, or set:
    - **Build command:** `npm install`
    - **Start command:** `npm start`
