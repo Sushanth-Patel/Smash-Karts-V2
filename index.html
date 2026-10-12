@@ -502,6 +502,56 @@
       font-weight: 700;
     }
 
+    .how-to-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+    .how-to-header {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #fbbf24;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .how-to-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    .hud-btn {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fff;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(8px);
+    }
+    .hud-btn:hover {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: #fbbf24;
+      transform: translateY(-1px);
+    }
+
     /* HUD Elements */
     #hud {
       position: fixed;
@@ -893,7 +943,10 @@
       </div>
 
       <div class="hud-top-right">
-        <div class="stat-pill" id="fpsDisplay">60 FPS</div>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button id="hudPauseBtn" class="hud-btn" title="Pause Game (Esc / P)">⏸️ <span>PAUSE</span></button>
+          <div class="stat-pill" id="fpsDisplay">60 FPS</div>
+        </div>
         <div class="stat-pill ping hidden" id="pingDisplay">24 ms</div>
         <div id="killfeed"></div>
       </div>
@@ -978,9 +1031,14 @@
           <span>⚡ QUICK BATTLE (VS BOTS)</span>
         </button>
 
-        <button id="multiplayerBtn" class="btn btn-cyan">
-          <span>🌐 MULTIPLAYER LOBBY</span>
-        </button>
+        <div class="btn-row">
+          <button id="menuCreateRoomBtn" class="btn btn-cyan" style="flex:1;">
+            <span>👑 CREATE ROOM</span>
+          </button>
+          <button id="menuJoinRoomBtn" class="btn btn-secondary" style="flex:1;">
+            <span>🔑 JOIN ROOM</span>
+          </button>
+        </div>
 
         <div class="btn-row">
           <button id="garageBtn" class="btn btn-secondary" style="flex:1;">
@@ -1003,10 +1061,23 @@
       </div>
 
       <div id="mpLobbySelection">
-        <p class="subtitle">Join or host a multiplayer match with friends or players around the world.</p>
+        <p class="subtitle">Host a private battle or join friends using a 5-letter room code.</p>
+
+        <!-- Step-by-Step Guide on How to Create and Join Rooms -->
+        <div class="how-to-card">
+          <div class="how-to-header">
+            <span>💡 HOW MULTIPLAYER ROOMS WORK</span>
+          </div>
+          <div class="how-to-steps">
+            <div><b>1. Host:</b> Click <b>Create New Room</b> to generate your 5-letter code.</div>
+            <div><b>2. Invite:</b> Click <b>Copy Link</b> or share code with friends.</div>
+            <div><b>3. Join:</b> Friends enter the code or click the invite link to deploy!</div>
+          </div>
+        </div>
+
         <div class="btn-row" style="margin-bottom: 12px;">
-          <button id="createRoomBtn" class="btn btn-primary" style="flex:1;">Create Room</button>
-          <button id="joinRoomModalBtn" class="btn btn-secondary" style="flex:1;">Join with Code</button>
+          <button id="createRoomBtn" class="btn btn-primary" style="flex:1;">👑 Create New Room</button>
+          <button id="joinRoomModalBtn" class="btn btn-cyan" style="flex:1;">🔑 Join with Code</button>
         </div>
         <div class="settings-group">
           <div class="settings-row">
@@ -1027,7 +1098,12 @@
             <div style="font-size:10px;text-transform:uppercase;color:#94a3b8;font-weight:800;">Room Code</div>
             <div id="displayRoomCode" class="room-code-val">TURBO</div>
           </div>
-          <button id="copyRoomCodeBtn" class="copy-btn">Copy Code</button>
+          <div style="display:flex; gap:6px;">
+            <button id="copyRoomCodeBtn" class="copy-btn">Copy Code</button>
+            <button id="copyRoomLinkBtn" class="copy-btn" style="background:rgba(6, 182, 212, 0.2); border-color:#06b6d4; color:#38bdf8;">📋 Copy Link</button>
+          </div>
+        </div>
+        <div id="roomCopyNotice" class="hidden" style="color:#10b981; font-size:11px; font-weight:800; margin-bottom:8px; text-align:center;">✓ Copied to clipboard! Share with your friends.</div>
         </div>
 
         <div class="auto-arena-card" style="margin-bottom:12px;">
@@ -1228,6 +1304,33 @@
       </div>
 
       <button class="btn btn-primary close-modal-btn" style="width:100%;">Save Settings</button>
+    </div>
+  </div>
+
+  <!-- IN-GAME PAUSE MODAL -->
+  <div id="pauseOverlay" class="overlay hidden" style="backdrop-filter: blur(14px); background: rgba(9, 13, 22, 0.82);">
+    <div class="panel" style="max-width: 400px;">
+      <span class="logo-badge">Battle Suspended</span>
+      <h2 class="title" style="font-size: 26px;">GAME PAUSED</h2>
+      <p class="subtitle">Match is paused. Catch your breath racer!</p>
+
+      <div class="menu-actions" style="margin-top: 18px;">
+        <button id="resumeBattleBtn" class="btn btn-primary">
+          <span>▶️ RESUME BATTLE</span>
+        </button>
+
+        <button id="restartBattleBtn" class="btn btn-cyan">
+          <span>🔄 RESTART MATCH</span>
+        </button>
+
+        <button id="pauseSettingsBtn" class="btn btn-secondary">
+          <span>⚙️ AUDIO & SETTINGS</span>
+        </button>
+
+        <button id="exitToMenuBtn" class="btn btn-secondary" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">
+          <span>🚪 EXIT TO MAIN MENU</span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -3759,13 +3862,51 @@
     }
 
     /* ==========================================================================
-       USER INPUT HANDLING
+       USER INPUT HANDLING & PAUSE SYSTEM
        ========================================================================== */
     const keys = {};
+
+    function pauseGame() {
+      if (gameState !== "playing") return;
+      gameState = "paused";
+      sound.setEngineSpeed(0);
+      document.getElementById("pauseOverlay").classList.remove("hidden");
+    }
+
+    function resumeGame() {
+      if (gameState !== "paused") return;
+      gameState = "playing";
+      document.getElementById("pauseOverlay").classList.add("hidden");
+    }
+
+    function exitToMainMenu() {
+      gameState = "menu";
+      sound.setEngineSpeed(0);
+      document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
+      document.getElementById("hud").classList.add("hidden");
+      menuOverlay.classList.remove("hidden");
+
+      if (net.ws && net.ws.readyState === WebSocket.OPEN && net.roomCode) {
+        net.roomCode = null;
+        net.isHost = false;
+        net.connect();
+      }
+    }
 
     window.addEventListener("keydown", (e) => {
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault();
       keys[e.code] = true;
+
+      // Escape or P to Pause/Resume
+      if (e.code === "Escape" || e.code === "KeyP") {
+        if (gameState === "playing") {
+          pauseGame();
+          return;
+        } else if (gameState === "paused") {
+          resumeGame();
+          return;
+        }
+      }
 
       if (rebindAction) {
         config.data.keybindings[rebindAction] = e.code;
@@ -3815,7 +3956,10 @@
     setupTouch("touchDrift", "ShiftLeft");
     document.getElementById("touchFire").addEventListener("touchstart", (e) => {
       e.preventDefault();
-      if (gameState === "playing") player.fireWeapon();
+      if (gameState === "playing") {
+        if (player.currentWeapon) player.fireWeapon();
+        else player.jumpHop();
+      }
     }, { passive: false });
 
     /* ==========================================================================
@@ -3825,6 +3969,7 @@
     const mpOverlay = document.getElementById("multiplayerOverlay");
     const garageOverlay = document.getElementById("garageOverlay");
     const settingsOverlay = document.getElementById("settingsOverlay");
+    const pauseOverlay = document.getElementById("pauseOverlay");
     const usernameInput = document.getElementById("usernameInput");
 
     usernameInput.value = config.data.username;
@@ -3838,15 +3983,33 @@
       rotateToNextMap();
       startLocalMatch();
     });
-    document.getElementById("returnMenuBtn").addEventListener("click", () => {
-      document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
-      menuOverlay.classList.remove("hidden");
-    });
+    document.getElementById("returnMenuBtn").addEventListener("click", exitToMainMenu);
 
-    document.getElementById("multiplayerBtn").addEventListener("click", () => {
+    // Pause Modal Controls
+    document.getElementById("hudPauseBtn").addEventListener("click", pauseGame);
+    document.getElementById("resumeBattleBtn").addEventListener("click", resumeGame);
+    document.getElementById("restartBattleBtn").addEventListener("click", () => {
+      pauseOverlay.classList.add("hidden");
+      startLocalMatch();
+    });
+    document.getElementById("pauseSettingsBtn").addEventListener("click", () => {
+      settingsOverlay.classList.remove("hidden");
+    });
+    document.getElementById("exitToMenuBtn").addEventListener("click", exitToMainMenu);
+
+    // Main Menu Navigation
+    document.getElementById("menuCreateRoomBtn").addEventListener("click", () => {
       menuOverlay.classList.add("hidden");
       mpOverlay.classList.remove("hidden");
+      document.getElementById("createRoomBtn").click();
     });
+
+    document.getElementById("menuJoinRoomBtn").addEventListener("click", () => {
+      menuOverlay.classList.add("hidden");
+      mpOverlay.classList.remove("hidden");
+      document.getElementById("joinRoomModalBtn").click();
+    });
+
     document.getElementById("garageBtn").addEventListener("click", () => {
       menuOverlay.classList.add("hidden");
       garageOverlay.classList.remove("hidden");
@@ -3856,10 +4019,46 @@
       settingsOverlay.classList.remove("hidden");
     });
 
+    // Copy Room Code and Direct Invite Link
+    document.getElementById("copyRoomCodeBtn").addEventListener("click", () => {
+      const code = document.getElementById("displayRoomCode").textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        const notice = document.getElementById("roomCopyNotice");
+        notice.textContent = "✓ Code Copied! Share with friends.";
+        notice.classList.remove("hidden");
+        setTimeout(() => notice.classList.add("hidden"), 2500);
+      });
+    });
+
+    document.getElementById("copyRoomLinkBtn").addEventListener("click", () => {
+      const code = document.getElementById("displayRoomCode").textContent;
+      const link = `${window.location.origin}${window.location.pathname}?room=${code}`;
+      navigator.clipboard.writeText(link).then(() => {
+        const notice = document.getElementById("roomCopyNotice");
+        notice.textContent = "✓ 1-Click Invite Link Copied!";
+        notice.classList.remove("hidden");
+        setTimeout(() => notice.classList.add("hidden"), 3000);
+      });
+    });
+
+    // Auto-detect URL parameter ?room=CODE
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get("room");
+    if (roomParam) {
+      document.getElementById("joinRoomCodeInput").value = roomParam.toUpperCase();
+      menuOverlay.classList.add("hidden");
+      mpOverlay.classList.remove("hidden");
+      document.getElementById("joinRoomModalBtn").click();
+    }
+
     document.querySelectorAll(".close-modal-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
-        menuOverlay.classList.remove("hidden");
+        if (gameState === "paused") {
+          pauseOverlay.classList.remove("hidden");
+        } else {
+          menuOverlay.classList.remove("hidden");
+        }
       });
     });
 
