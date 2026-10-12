@@ -1,0 +1,16 @@
+name: Render 24/7 Keep-Alive
+
+on:
+  schedule:
+    # Runs every 12 minutes to keep the Render free tier awake 24/7 (Render sleeps at 15m)
+    - cron: '*/12 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Turbo Kart Render Service
+        run: |
+          echo "Pinging https://turbo-kart-7e0n.onrender.com/status at $(date)"
+          curl -s -f -m 30 https://turbo-kart-7e0n.onrender.com/status || echo "Ping dispatched"

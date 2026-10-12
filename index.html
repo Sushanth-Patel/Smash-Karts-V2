@@ -3347,7 +3347,7 @@
 
         const isFile = window.location.protocol === "file:" || !window.location.host;
         if (isFile) {
-          return "ws://localhost:3000";
+          return "wss://turbo-kart-7e0n.onrender.com";
         }
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
         return `${protocol}//${window.location.host}`;

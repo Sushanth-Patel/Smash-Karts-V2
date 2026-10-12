@@ -395,3 +395,22 @@ server.listen(PORT, () => {
   console.log(`⚡ WebSocket ready on ws://localhost:${PORT}`);
   console.log(`===============================================`);
 });
+
+// ============================================================================
+// 24/7 KEEP-ALIVE SYSTEM FOR RENDER / CLOUD HOSTING
+// Automatically pings the server every 10 minutes to prevent Render free-tier sleep
+// ============================================================================
+const KEEP_ALIVE_URL = process.env.RENDER_EXTERNAL_URL || "https://turbo-kart-7e0n.onrender.com";
+
+setInterval(() => {
+  try {
+    const pingTarget = `${KEEP_ALIVE_URL.replace(/\/$/, "")}/status`;
+    const httpLib = pingTarget.startsWith("https") ? require("https") : require("http");
+    httpLib.get(pingTarget, (res) => {
+      console.log(`[KeepAlive] 24/7 Ping sent to ${pingTarget} - Status: ${res.statusCode}`);
+    }).on("error", (err) => {
+      console.log(`[KeepAlive] Ping notice: ${err.message}`);
+    });
+  } catch (e) {}
+}, 10 * 60 * 1000); // Every 10 minutes (Render sleeps after 15 minutes of inactivity)
+
