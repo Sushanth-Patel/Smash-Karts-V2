@@ -1,0 +1,25 @@
+{
+  "name": "turbo-smash-karts-3d",
+  "version": "1.0.0",
+  "description": "Production-ready 3D Smash Karts Multiplayer Battle Arena",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "server": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "threejs",
+    "kart",
+    "multiplayer",
+    "smash-karts",
+    "game",
+    "webrtc",
+    "websocket"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
