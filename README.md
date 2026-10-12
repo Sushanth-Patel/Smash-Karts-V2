@@ -103,6 +103,10 @@ Static hosts such as Netlify and Vercel can serve the browser client, but they d
 | `npm run server` | Alias for `npm start` |
 | `npm run dev` | Start the development server |
 
+## Live demo
+
+Play the deployed game at [turbo-kart-7e0n.onrender.com](https://turbo-kart-7e0n.onrender.com/).
+
 ## License
 
 The project is released under the MIT License, as declared in `package.json`.
