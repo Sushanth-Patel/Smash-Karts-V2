@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Turbo Smash Karts 3D - Online Multiplayer Battle Arena</title>
-  <meta name="description" content="Production-ready 3D Smash Karts Multiplayer Battle Arena with custom karts, weapon pickups, bot AI, and real-time room battles." />
+  <title>Turbo Smash Karts 3D - Online Battle Arena</title>
+  <meta name="description" content="Production-ready 3D Smash Karts Multiplayer Battle Arena with weapon rules, map changes, custom karts, bot AI, and real-time room battles." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -52,7 +52,7 @@
       overflow: hidden;
     }
 
-    /* General Overlay Styles */
+    /* General Overlays */
     .overlay {
       position: fixed;
       inset: 0;
@@ -70,7 +70,7 @@
     }
 
     .panel {
-      width: min(94vw, 520px);
+      width: min(94vw, 540px);
       max-height: 90vh;
       overflow-y: auto;
       background: var(--card-bg);
@@ -120,13 +120,12 @@
     }
 
     p.subtitle {
-      margin: 0 0 20px;
+      margin: 0 0 18px;
       color: #94a3b8;
       font-size: 14px;
       line-height: 1.4;
     }
 
-    /* Primary Navigation Buttons */
     .menu-actions {
       display: flex;
       flex-direction: column;
@@ -193,7 +192,7 @@
       filter: brightness(1.1);
     }
 
-    /* Nickname input bar */
+    /* Player Profile Bar */
     .player-profile-bar {
       display: flex;
       align-items: center;
@@ -202,11 +201,11 @@
       border: 1px solid var(--glass-border);
       border-radius: 14px;
       padding: 10px 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .player-profile-bar label {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 800;
       color: #94a3b8;
       text-transform: uppercase;
@@ -222,6 +221,59 @@
       font-size: 16px;
       font-weight: 800;
       font-family: inherit;
+    }
+
+    /* Map Selection Strip */
+    .map-select-box {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 12px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .map-select-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .map-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .map-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 2px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 8px 6px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 800;
+      color: #cbd5e1;
+      transition: all 0.15s;
+    }
+    .map-card .icon {
+      font-size: 22px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .map-card:hover {
+      background: rgba(30, 41, 59, 0.85);
+      color: #fff;
+    }
+    .map-card.active {
+      border-color: #fbbf24;
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.3);
+      transform: scale(1.03);
     }
 
     /* Tabs & Dialogs */
@@ -247,7 +299,7 @@
     }
     .close-icon-btn:hover { color: #fff; }
 
-    /* Customization Garage */
+    /* Customization Chips (Garage) */
     .garage-section {
       text-align: left;
       margin-bottom: 16px;
@@ -319,7 +371,7 @@
       box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
     }
 
-    /* Settings Dialog Form */
+    /* Settings Dialog */
     .settings-group {
       background: rgba(30, 41, 59, 0.4);
       border: 1px solid var(--glass-border);
@@ -460,7 +512,6 @@
     .leader-row .name { flex: 1; padding: 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; }
     .leader-row .score { color: #fbbf24; font-weight: 800; }
 
-    /* Center Match Timer */
     .match-timer-badge {
       display: flex;
       flex-direction: column;
@@ -485,7 +536,6 @@
       text-transform: uppercase;
     }
 
-    /* Top Right: System Status & Killfeed */
     .hud-top-right {
       display: flex;
       flex-direction: column;
@@ -580,6 +630,8 @@
       align-items: center;
       gap: 8px;
     }
+
+    /* Weapon Slot with Roulette Spin Animation */
     .weapon-slot-card {
       background: var(--card-bg);
       border: 2px solid rgba(245, 158, 11, 0.4);
@@ -602,10 +654,19 @@
       animation: weaponPulse 1.4s infinite alternate;
       border-color: #f59e0b;
     }
+    .weapon-slot-card.rolling-weapon {
+      animation: rouletteGlow 0.2s infinite alternate;
+      border-color: #06b6d4;
+    }
     @keyframes weaponPulse {
       0% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
       100% { box-shadow: 0 0 28px rgba(245, 158, 11, 0.7); }
     }
+    @keyframes rouletteGlow {
+      0% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
+      100% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.8); }
+    }
+
     .weapon-icon-box {
       width: 48px;
       height: 48px;
@@ -685,7 +746,7 @@
       background: linear-gradient(90deg, #06b6d4, #f59e0b, #ef4444);
     }
 
-    /* Mobile Virtual Touch Controls */
+    /* Mobile Controls */
     #mobileControls {
       position: fixed;
       inset: 0;
@@ -786,7 +847,7 @@
 
       <div class="match-timer-badge">
         <div id="matchTime" class="timer-text">02:00</div>
-        <div id="gameModeLabel" class="timer-sub">Arena Battle</div>
+        <div id="gameModeLabel" class="timer-sub">Neon Stadium</div>
       </div>
 
       <div class="hud-top-right">
@@ -813,7 +874,7 @@
           </div>
           <div class="weapon-meta">
             <div id="weaponName" class="weapon-name">Drive into ? Box</div>
-            <div id="weaponHint" class="weapon-hint">SPACE to Fire</div>
+            <div id="weaponHint" class="weapon-hint">ONE WEAPON AT A TIME</div>
           </div>
         </div>
 
@@ -848,13 +909,32 @@
   <!-- MAIN MENU MODAL -->
   <div id="menuOverlay" class="overlay">
     <div class="panel">
-      <span class="logo-badge">3D Online Battle Arena</span>
+      <span class="logo-badge">3D Smash Karts Arena</span>
       <h1 class="title">SMASH KARTS 3D</h1>
-      <p class="subtitle">Real-time kart combat. Collect mystery boxes, launch missiles, and smash opponents!</p>
+      <p class="subtitle">Official combat rules: One weapon at a time, dynamic arena maps, and high-octane battle action!</p>
 
       <div class="player-profile-bar">
         <label for="usernameInput">Racer Name</label>
         <input type="text" id="usernameInput" maxlength="14" value="SpeedRacer" placeholder="Enter nickname..." />
+      </div>
+
+      <!-- Battle Map Selection Strip -->
+      <div class="map-select-box">
+        <div class="map-select-title">
+          <span>Choose Arena Map</span>
+          <span id="selectedMapLabel" style="color:#fbbf24;">Neon Stadium</span>
+        </div>
+        <div class="map-cards" id="menuMapSelector">
+          <div class="map-card active" data-map="stadium">
+            <span class="icon">🏟️</span> Stadium
+          </div>
+          <div class="map-card" data-map="canyon">
+            <span class="icon">🏜️</span> Canyon
+          </div>
+          <div class="map-card" data-map="lava">
+            <span class="icon">🌋</span> Magma Pit
+          </div>
+        </div>
       </div>
 
       <div class="menu-actions">
@@ -914,6 +994,18 @@
           <button id="copyRoomCodeBtn" class="copy-btn">Copy Code</button>
         </div>
 
+        <div class="map-select-box" style="margin-bottom:12px;">
+          <div class="map-select-title">
+            <span>Match Arena</span>
+            <span id="mpMapLabel" style="color:#fbbf24;">Neon Stadium</span>
+          </div>
+          <div class="map-cards" id="lobbyMapSelector">
+            <div class="map-card active" data-map="stadium"><span class="icon">🏟️</span> Stadium</div>
+            <div class="map-card" data-map="canyon"><span class="icon">🏜️</span> Canyon</div>
+            <div class="map-card" data-map="lava"><span class="icon">🌋</span> Magma Pit</div>
+          </div>
+        </div>
+
         <div class="garage-section-title">
           <span>Players in Room</span>
           <span id="playerCountLabel">1 / 6</span>
@@ -944,26 +1036,16 @@
         <button class="close-icon-btn close-modal-btn">✕</button>
       </div>
 
-      <!-- Kart Chassis -->
       <div class="garage-section">
         <div class="garage-section-title">Kart Chassis</div>
         <div class="selection-chips" id="chassisSelector">
-          <div class="chip-btn active" data-chassis="standard">
-            <span class="icon">🏎️</span> Standard
-          </div>
-          <div class="chip-btn" data-chassis="formula">
-            <span class="icon">🏁</span> Speedster F1
-          </div>
-          <div class="chip-btn" data-chassis="buggy">
-            <span class="icon">🚙</span> Buggy Beast
-          </div>
-          <div class="chip-btn" data-chassis="cyber">
-            <span class="icon">⚡</span> Cyber Cruiser
-          </div>
+          <div class="chip-btn active" data-chassis="standard"><span class="icon">🏎️</span> Standard</div>
+          <div class="chip-btn" data-chassis="formula"><span class="icon">🏁</span> Speedster F1</div>
+          <div class="chip-btn" data-chassis="buggy"><span class="icon">🚙</span> Buggy Beast</div>
+          <div class="chip-btn" data-chassis="cyber"><span class="icon">⚡</span> Cyber Cruiser</div>
         </div>
       </div>
 
-      <!-- Driver Hats -->
       <div class="garage-section">
         <div class="garage-section-title">Driver Hat</div>
         <div class="selection-chips" id="hatSelector">
@@ -978,7 +1060,6 @@
         </div>
       </div>
 
-      <!-- Wheels -->
       <div class="garage-section">
         <div class="garage-section-title">Rims & Wheels</div>
         <div class="selection-chips" id="wheelSelector">
@@ -989,7 +1070,6 @@
         </div>
       </div>
 
-      <!-- Exhaust Particle Trail -->
       <div class="garage-section">
         <div class="garage-section-title">Exhaust Trail</div>
         <div class="selection-chips" id="trailSelector">
@@ -1000,7 +1080,6 @@
         </div>
       </div>
 
-      <!-- Paint Colors -->
       <div class="garage-section">
         <div class="garage-section-title">Paint Finish</div>
         <div class="color-swatches" id="colorSwatches">
@@ -1027,7 +1106,6 @@
         <button class="close-icon-btn close-modal-btn">✕</button>
       </div>
 
-      <!-- Graphics Settings -->
       <div class="settings-group">
         <div class="garage-section-title">Graphics & Performance</div>
         <div class="settings-row">
@@ -1060,7 +1138,6 @@
         </div>
       </div>
 
-      <!-- Camera & Audio -->
       <div class="settings-group">
         <div class="garage-section-title">Camera & Audio</div>
         <div class="settings-row">
@@ -1086,7 +1163,6 @@
         </div>
       </div>
 
-      <!-- Keybindings -->
       <div class="settings-group">
         <div class="garage-section-title">Controls & Keybindings</div>
         <div class="settings-row">
@@ -1126,9 +1202,7 @@
       <h1 class="title">VICTORY PODIUM</h1>
       <p class="subtitle">Match has ended! Final rankings and combat performance:</p>
 
-      <div class="podium-container" id="podiumArea">
-        <!-- Rendered dynamically -->
-      </div>
+      <div class="podium-container" id="podiumArea"></div>
 
       <table class="stats-table">
         <tr>
@@ -1150,7 +1224,7 @@
       </table>
 
       <div class="btn-row">
-        <button id="rematchBtn" class="btn btn-primary" style="flex:1;">Play Again</button>
+        <button id="rematchBtn" class="btn btn-primary" style="flex:1;">Next Map Battle</button>
         <button id="returnMenuBtn" class="btn btn-secondary" style="flex:1;">Main Menu</button>
       </div>
     </div>
@@ -1171,6 +1245,7 @@
           wheels: "slicks",
           trail: "flame",
           color: 0x10b981,
+          selectedMap: "stadium",
           quality: "high",
           shadows: "on",
           resolution: 1.0,
@@ -1211,7 +1286,7 @@
     const config = new ConfigManager();
 
     /* ==========================================================================
-       SYNTHESIZED WEB AUDIO ENGINE (Master, SFX, Pitch-shifted Engine Drone)
+       SYNTHESIZED WEB AUDIO ENGINE
        ========================================================================== */
     class AudioEngine {
       constructor() {
@@ -1220,7 +1295,6 @@
         this.sfxGain = null;
         this.engineOsc = null;
         this.engineGain = null;
-        this.muted = false;
       }
 
       init() {
@@ -1235,7 +1309,6 @@
         this.sfxGain = this.ctx.createGain();
         this.sfxGain.connect(this.masterGain);
 
-        // Procedural Kart Engine Drone
         try {
           this.engineOsc = this.ctx.createOscillator();
           this.engineGain = this.ctx.createGain();
@@ -1268,6 +1341,20 @@
         if (!this.ctx || !this.engineOsc) return;
         const targetFreq = 45 + Math.min(1.2, Math.abs(speedRatio)) * 140;
         this.engineOsc.frequency.setTargetAtTime(targetFreq, this.ctx.currentTime, 0.05);
+      }
+
+      playRouletteTick() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(700 + Math.random() * 200, this.ctx.currentTime);
+        gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(this.sfxGain);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.05);
       }
 
       playRocket() {
@@ -1359,11 +1446,64 @@
     const sound = new AudioEngine();
 
     /* ==========================================================================
-       ARENA, WEAPONS & CONSTANTS
+       ARENA MAPS & THEMES (Stadium, Desert Canyon, Magma Caldera)
        ========================================================================== */
     const ARENA_SIZE = 140;
     const ARENA_BOUNDS = ARENA_SIZE / 2 - 4;
     const MATCH_DURATION = 120;
+
+    const MAP_CONFIGS = {
+      stadium: {
+        id: "stadium",
+        name: "Neon Stadium",
+        skyColor: 0x0c1222,
+        fogDensity: 0.007,
+        floorColor: "#162035",
+        gridColor: "rgba(6, 182, 212, 0.25)",
+        ringColor: "rgba(245, 158, 11, 0.7)",
+        wallColor: 0x1e293b,
+        rimColor: 0xef4444,
+        sunColor: 0xfff8eb,
+        sunIntensity: 1.5,
+        accentLight: 0x06b6d4,
+        hazards: []
+      },
+      canyon: {
+        id: "canyon",
+        name: "Desert Canyon",
+        skyColor: 0x451a03,
+        fogDensity: 0.009,
+        floorColor: "#9a3412",
+        gridColor: "rgba(251, 191, 36, 0.2)",
+        ringColor: "rgba(234, 88, 12, 0.8)",
+        wallColor: 0x78350f,
+        rimColor: 0xf59e0b,
+        sunColor: 0xfef08a,
+        sunIntensity: 1.7,
+        accentLight: 0xd97706,
+        hazards: []
+      },
+      lava: {
+        id: "lava",
+        name: "Magma Caldera",
+        skyColor: 0x3b0764,
+        fogDensity: 0.010,
+        floorColor: "#18181b",
+        gridColor: "rgba(239, 68, 68, 0.35)",
+        ringColor: "rgba(220, 38, 38, 0.9)",
+        wallColor: 0x27272a,
+        rimColor: 0xff4500,
+        sunColor: 0xf87171,
+        sunIntensity: 1.8,
+        accentLight: 0xef4444,
+        hazards: [
+          { x: -22, z: -22, radius: 7 },
+          { x: 22, z: 22, radius: 7 }
+        ]
+      }
+    };
+
+    const MAP_KEYS = Object.keys(MAP_CONFIGS);
 
     const WEAPONS = {
       ROCKET: { id: "ROCKET", name: "Homing Rocket", icon: "🚀", ammo: 1, damage: 65, speed: 68 },
@@ -1391,7 +1531,6 @@
     renderer.shadowMap.enabled = config.data.shadows === "on";
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    // Lights
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x1e293b, 1.1);
     scene.add(hemiLight);
 
@@ -1411,28 +1550,53 @@
     scene.add(pointAccent);
 
     /* ==========================================================================
-       ARENA GENERATION (Obstacles, Ramp Barriers, Speed Boost Strips)
+       DYNAMIC MAP ARENA BUILDER
        ========================================================================== */
+    const arenaGroup = new THREE.Group();
+    scene.add(arenaGroup);
+
     const obstacles = [];
     const boostPads = [];
+    const hazardZones = [];
+    let currentMapId = config.data.selectedMap || "stadium";
 
-    function buildArena() {
-      // Procedural Arena Texture
+    function loadMap(mapId) {
+      currentMapId = mapId;
+      const mapConf = MAP_CONFIGS[mapId] || MAP_CONFIGS.stadium;
+
+      // Update Sky & Lighting
+      scene.background.setHex(mapConf.skyColor);
+      scene.fog.color.setHex(mapConf.skyColor);
+      scene.fog.density = mapConf.fogDensity;
+      dirLight.color.setHex(mapConf.sunColor);
+      dirLight.intensity = mapConf.sunIntensity;
+      pointAccent.color.setHex(mapConf.accentLight);
+
+      // Clear existing arena meshes
+      while (arenaGroup.children.length > 0) {
+        const obj = arenaGroup.children[0];
+        arenaGroup.remove(obj);
+        if (obj.geometry) obj.geometry.dispose();
+      }
+      obstacles.length = 0;
+      boostPads.length = 0;
+      hazardZones.length = 0;
+
+      // 1. Procedural Floor Texture
       const cv = document.createElement("canvas");
-      cv.width = 512;
-      cv.height = 512;
+      cv.width = 512; cv.height = 512;
       const ctx = cv.getContext("2d");
-      ctx.fillStyle = "#162035";
+      ctx.fillStyle = mapConf.floorColor;
       ctx.fillRect(0, 0, 512, 512);
 
-      ctx.strokeStyle = "rgba(6, 182, 212, 0.25)";
+      ctx.strokeStyle = mapConf.gridColor;
       ctx.lineWidth = 4;
       for (let i = 0; i <= 512; i += 64) {
         ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(512, i); ctx.stroke();
       }
 
-      ctx.strokeStyle = "rgba(245, 158, 11, 0.7)";
+      ctx.strokeStyle = mapConf.ringColor;
       ctx.lineWidth = 10;
       ctx.beginPath();
       ctx.arc(256, 256, 170, 0, Math.PI * 2);
@@ -1449,11 +1613,11 @@
       );
       ground.rotation.x = -Math.PI / 2;
       ground.receiveShadow = true;
-      scene.add(ground);
+      arenaGroup.add(ground);
 
-      // Arena Outer Walls
-      const wallMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5, metalness: 0.8 });
-      const rimMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+      // 2. Outer Perimeter Walls
+      const wallMat = new THREE.MeshStandardMaterial({ color: mapConf.wallColor, roughness: 0.5, metalness: 0.8 });
+      const rimMat = new THREE.MeshBasicMaterial({ color: mapConf.rimColor });
       const half = ARENA_SIZE / 2;
       const wallHeight = 4.5;
 
@@ -1468,11 +1632,11 @@
         const wall = new THREE.Mesh(new THREE.BoxGeometry(def.w, wallHeight, def.d), wallMat);
         wall.position.set(def.x, wallHeight / 2, def.z);
         wall.castShadow = true;
-        scene.add(wall);
+        arenaGroup.add(wall);
 
         const rim = new THREE.Mesh(new THREE.BoxGeometry(def.w, 0.4, def.d), rimMat);
         rim.position.set(def.x, wallHeight + 0.2, def.z);
-        scene.add(rim);
+        arenaGroup.add(rim);
 
         obstacles.push({
           type: "box",
@@ -1483,45 +1647,94 @@
         });
       });
 
-      // Central Pillar
-      const centerPillar = new THREE.Mesh(
-        new THREE.CylinderGeometry(5.5, 6.5, 5, 8),
-        new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.7 })
-      );
-      centerPillar.position.set(0, 2.5, 0);
-      centerPillar.castShadow = true;
-      scene.add(centerPillar);
-      obstacles.push({ type: "circle", x: 0, z: 0, radius: 6.8 });
+      // 3. Themed Obstacles
+      if (mapId === "canyon") {
+        // Sandstone Pyramids & Desert Pillars
+        const sandStoneMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.9 });
+        const pyramid = new THREE.Mesh(new THREE.ConeGeometry(7, 6, 4), sandStoneMat);
+        pyramid.position.set(0, 3, 0);
+        pyramid.rotation.y = Math.PI / 4;
+        pyramid.castShadow = true;
+        arenaGroup.add(pyramid);
+        obstacles.push({ type: "circle", x: 0, z: 0, radius: 7.2 });
 
-      // Tactical Barriers
-      const crateMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.9 });
-      const barrierMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.5, metalness: 0.4 });
-      const blocks = [
-        { x: -28, z: -28, w: 6, h: 3, d: 6, mat: crateMat },
-        { x: 28, z: -28, w: 6, h: 3, d: 6, mat: crateMat },
-        { x: -28, z: 28, w: 6, h: 3, d: 6, mat: crateMat },
-        { x: 28, z: 28, w: 6, h: 3, d: 6, mat: crateMat },
-        { x: 0, z: -42, w: 14, h: 2.4, d: 3, mat: barrierMat },
-        { x: 0, z: 42, w: 14, h: 2.4, d: 3, mat: barrierMat },
-        { x: -42, z: 0, w: 3, h: 2.4, d: 14, mat: barrierMat },
-        { x: 42, z: 0, w: 3, h: 2.4, d: 14, mat: barrierMat }
-      ];
-
-      blocks.forEach(b => {
-        const mesh = new THREE.Mesh(new THREE.BoxGeometry(b.w, b.h, b.d), b.mat);
-        mesh.position.set(b.x, b.h / 2, b.z);
-        mesh.castShadow = true;
-        scene.add(mesh);
-        obstacles.push({
-          type: "box",
-          minX: b.x - b.w / 2 - 1.2,
-          maxX: b.x + b.w / 2 + 1.2,
-          minZ: b.z - b.d / 2 - 1.2,
-          maxZ: b.z + b.d / 2 + 1.2
+        const pillarCoords = [
+          { x: -28, z: -28 }, { x: 28, z: -28 }, { x: -28, z: 28 }, { x: 28, z: 28 },
+          { x: 0, z: -40 }, { x: 0, z: 40 }, { x: -40, z: 0 }, { x: 40, z: 0 }
+        ];
+        pillarCoords.forEach(p => {
+          const col = new THREE.Mesh(new THREE.CylinderGeometry(2.5, 3, 5, 8), sandStoneMat);
+          col.position.set(p.x, 2.5, p.z);
+          col.castShadow = true;
+          arenaGroup.add(col);
+          obstacles.push({ type: "circle", x: p.x, z: p.z, radius: 3.5 });
         });
-      });
+      } else if (mapId === "lava") {
+        // Magma Caldera: Obsidian Pillars & Glowing Lava Hazard Pools
+        const obsidianMat = new THREE.MeshStandardMaterial({ color: 0x18181b, roughness: 0.3, metalness: 0.7 });
+        const centerRock = new THREE.Mesh(new THREE.BoxGeometry(8, 4.5, 8), obsidianMat);
+        centerRock.position.set(0, 2.25, 0);
+        centerRock.castShadow = true;
+        arenaGroup.add(centerRock);
+        obstacles.push({ type: "box", minX: -5.2, maxX: 5.2, minZ: -5.2, maxZ: 5.2 });
 
-      // Speed Boost Strips
+        // Lava Hazard Pools (Dealing damage over time)
+        mapConf.hazards.forEach(h => {
+          const lavaPool = new THREE.Mesh(
+            new THREE.CircleGeometry(h.radius, 24),
+            new THREE.MeshBasicMaterial({ color: 0xff3300 })
+          );
+          lavaPool.rotation.x = -Math.PI / 2;
+          lavaPool.position.set(h.x, 0.06, h.z);
+          arenaGroup.add(lavaPool);
+          hazardZones.push(h);
+        });
+
+        const blocks = [
+          { x: -30, z: 0, w: 4, h: 3, d: 16 },
+          { x: 30, z: 0, w: 4, h: 3, d: 16 }
+        ];
+        blocks.forEach(b => {
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(b.w, b.h, b.d), obsidianMat);
+          mesh.position.set(b.x, b.h / 2, b.z);
+          mesh.castShadow = true;
+          arenaGroup.add(mesh);
+          obstacles.push({ type: "box", minX: b.x - b.w / 2 - 1.2, maxX: b.x + b.w / 2 + 1.2, minZ: b.z - b.d / 2 - 1.2, maxZ: b.z + b.d / 2 + 1.2 });
+        });
+      } else {
+        // Stadium Default: Center tech pillar & barricades
+        const centerPillar = new THREE.Mesh(
+          new THREE.CylinderGeometry(5.5, 6.5, 5, 8),
+          new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.4, metalness: 0.7 })
+        );
+        centerPillar.position.set(0, 2.5, 0);
+        centerPillar.castShadow = true;
+        arenaGroup.add(centerPillar);
+        obstacles.push({ type: "circle", x: 0, z: 0, radius: 6.8 });
+
+        const crateMat = new THREE.MeshStandardMaterial({ color: 0xb45309, roughness: 0.9 });
+        const barrierMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, roughness: 0.5, metalness: 0.4 });
+        const blocks = [
+          { x: -28, z: -28, w: 6, h: 3, d: 6, mat: crateMat },
+          { x: 28, z: -28, w: 6, h: 3, d: 6, mat: crateMat },
+          { x: -28, z: 28, w: 6, h: 3, d: 6, mat: crateMat },
+          { x: 28, z: 28, w: 6, h: 3, d: 6, mat: crateMat },
+          { x: 0, z: -42, w: 14, h: 2.4, d: 3, mat: barrierMat },
+          { x: 0, z: 42, w: 14, h: 2.4, d: 3, mat: barrierMat },
+          { x: -42, z: 0, w: 3, h: 2.4, d: 14, mat: barrierMat },
+          { x: 42, z: 0, w: 3, h: 2.4, d: 14, mat: barrierMat }
+        ];
+
+        blocks.forEach(b => {
+          const mesh = new THREE.Mesh(new THREE.BoxGeometry(b.w, b.h, b.d), b.mat);
+          mesh.position.set(b.x, b.h / 2, b.z);
+          mesh.castShadow = true;
+          arenaGroup.add(mesh);
+          obstacles.push({ type: "box", minX: b.x - b.w / 2 - 1.2, maxX: b.x + b.w / 2 + 1.2, minZ: b.z - b.d / 2 - 1.2, maxZ: b.z + b.d / 2 + 1.2 });
+        });
+      }
+
+      // 4. Speed Boost Strips
       const boostPositions = [
         { x: 0, z: -22, rot: 0 },
         { x: 0, z: 22, rot: Math.PI },
@@ -1535,12 +1748,14 @@
         pad.rotation.x = -Math.PI / 2;
         pad.rotation.z = b.rot;
         pad.position.set(b.x, 0.05, b.z);
-        scene.add(pad);
+        arenaGroup.add(pad);
         boostPads.push({ x: b.x, z: b.z });
       });
+
+      document.getElementById("gameModeLabel").textContent = mapConf.name;
     }
 
-    buildArena();
+    loadMap(currentMapId);
 
     /* ==========================================================================
        MYSTERY BOXES (? BOXES)
@@ -1665,7 +1880,7 @@
     }
 
     /* ==========================================================================
-       PROCEDURAL 3D KART BUILDER (4 Chassis, 8 Hats, 4 Wheels, Custom Trails)
+       PROCEDURAL 3D KART BUILDER
        ========================================================================== */
     function buildKartMesh(colorHex, hatType = "crown", chassisType = "standard", wheelType = "slicks") {
       const group = new THREE.Group();
@@ -1679,9 +1894,7 @@
       if (wheelType === "neon") rimColor = 0x06b6d4;
       const rimMat = new THREE.MeshStandardMaterial({ color: rimColor, metalness: 0.85, roughness: 0.2 });
 
-      // Chassis Models
       if (chassisType === "formula") {
-        // Sleek F1 Formula Body
         const main = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 2.6), bodyMat);
         main.position.y = 0.45;
         group.add(main);
@@ -1694,32 +1907,23 @@
         wingRear.position.set(0, 1.25, -1.6);
         group.add(wingRear);
       } else if (chassisType === "buggy") {
-        // Monster Buggy Rollcage
         const main = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 2.3), bodyMat);
         main.position.y = 0.65;
         group.add(main);
 
-        const rollcage = new THREE.Mesh(
-          new THREE.TorusGeometry(0.7, 0.06, 8, 16),
-          chassisMat
-        );
+        const rollcage = new THREE.Mesh(new THREE.TorusGeometry(0.7, 0.06, 8, 16), chassisMat);
         rollcage.rotation.y = Math.PI / 2;
         rollcage.position.set(0, 1.15, -0.3);
         group.add(rollcage);
       } else if (chassisType === "cyber") {
-        // Futuristic Cyber Cruiser
         const main = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 2.4), bodyMat);
         main.position.y = 0.5;
         group.add(main);
 
-        const neonBar = new THREE.Mesh(
-          new THREE.BoxGeometry(1.45, 0.08, 0.1),
-          new THREE.MeshBasicMaterial({ color: 0x06b6d4 })
-        );
+        const neonBar = new THREE.Mesh(new THREE.BoxGeometry(1.45, 0.08, 0.1), new THREE.MeshBasicMaterial({ color: 0x06b6d4 }));
         neonBar.position.set(0, 0.52, 1.2);
         group.add(neonBar);
       } else {
-        // Standard Racer
         const main = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 2.3), bodyMat);
         main.position.y = 0.5;
         group.add(main);
@@ -1733,7 +1937,6 @@
         group.add(spoiler);
       }
 
-      // Driver Seat & Head
       const seat = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.6, 0.6), chassisMat);
       seat.position.set(0, 0.8, -0.3);
       group.add(seat);
@@ -1752,7 +1955,6 @@
       visor.position.set(0, 1.25, 0.05);
       group.add(visor);
 
-      // Hat Builder
       const hatGroup = new THREE.Group();
       hatGroup.position.set(0, 1.55, -0.2);
 
@@ -1793,7 +1995,6 @@
       }
       group.add(hatGroup);
 
-      // Invulnerability Shield
       const shield = new THREE.Mesh(
         new THREE.SphereGeometry(2.3, 16, 16),
         new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.6 })
@@ -1802,7 +2003,6 @@
       shield.visible = false;
       group.add(shield);
 
-      // Wheels
       const wheelGeo = new THREE.CylinderGeometry(0.5, 0.5, 0.4, 18);
       wheelGeo.rotateZ(Math.PI / 2);
       const rimGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.42, 12);
@@ -1832,7 +2032,7 @@
     }
 
     /* ==========================================================================
-       COMBATANT ENTITY (Player, AI Bots, Remote Players)
+       COMBATANT ENTITY WITH SMASH KARTS STRICT RULES
        ========================================================================== */
     class Combatant {
       constructor(id, name, color, hat, chassis, wheels, trail, isBot = false, isRemote = false) {
@@ -1850,6 +2050,7 @@
         this.smashes = 0;
         this.deaths = 0;
         this.score = 0;
+        this.killStreak = 0;
 
         this.heading = Math.random() * Math.PI * 2;
         this.speed = 0;
@@ -1859,16 +2060,17 @@
         this.driftTime = 0;
         this.isDrifting = false;
 
-        this.invulnerableTimer = 3.0;
+        this.invulnerableTimer = 3.0; // 3 sec spawn shield
         this.respawnTimer = 0;
         this.isDead = false;
 
+        // RULE: Strictly ONE weapon at a time
         this.currentWeapon = null;
         this.weaponAmmo = 0;
         this.weaponCooldown = 0;
         this.nitroTimer = 0;
+        this.isRollingWeapon = false; // Item Roulette spin state
 
-        // Remote interpolation buffers
         this.targetPos = new THREE.Vector3();
         this.targetHeading = 0;
 
@@ -1879,14 +2081,21 @@
         this.respawn();
       }
 
+      canCollectWeapon() {
+        // SMASH KARTS RULE: At a time strictly ONE weapon!
+        return !this.isDead && !this.currentWeapon && !this.isRollingWeapon && this.nitroTimer <= 0;
+      }
+
       respawn() {
         this.hp = 100;
         this.isDead = false;
         this.speed = 0;
         this.currentWeapon = null;
         this.weaponAmmo = 0;
-        this.invulnerableTimer = 2.8;
+        this.isRollingWeapon = false;
+        this.invulnerableTimer = 3.0;
         this.nitroTimer = 0;
+        this.killStreak = 0;
 
         const spawnAngle = Math.random() * Math.PI * 2;
         const spawnDist = 25 + Math.random() * 25;
@@ -1920,8 +2129,11 @@
       destroy(attacker) {
         this.isDead = true;
         this.deaths++;
+        this.killStreak = 0;
         this.respawnTimer = 2.8;
         this.group.visible = false;
+        this.currentWeapon = null;
+        this.isRollingWeapon = false;
 
         sound.playExplosion();
         spawnExplosionParticles(this.group.position.x, 1.5, this.group.position.z, 0xef4444, 35);
@@ -1929,23 +2141,75 @@
 
         if (attacker && attacker !== this) {
           attacker.smashes++;
+          attacker.killStreak++;
           attacker.score += 100;
           addKillfeed(attacker.name, this.name, attacker.currentWeapon ? attacker.currentWeapon.icon : "💥");
 
           if (!attacker.isBot && !attacker.isRemote) {
             sound.playPickup();
-            triggerAnnouncer(`SMASH! +100`);
+            // Multi-Kill Announcements
+            if (firstBlood) {
+              triggerAnnouncer("FIRST BLOOD! 🩸");
+              firstBlood = false;
+            } else if (attacker.killStreak === 2) {
+              triggerAnnouncer("DOUBLE SMASH! 💥💥");
+            } else if (attacker.killStreak === 3) {
+              triggerAnnouncer("TRIPLE SMASH! 🔥");
+            } else if (attacker.killStreak >= 5) {
+              triggerAnnouncer("UNSTOPPABLE RAMPAGE! ⚡");
+            } else {
+              triggerAnnouncer("SMASH! +100");
+            }
             triggerScreenShake(0.5);
           }
         } else {
-          addKillfeed("Arena", this.name, "☠️");
+          addKillfeed("Hazard", this.name, "☠️");
         }
 
         if (!this.isBot && !this.isRemote) {
-          triggerAnnouncer(`WRECKED! Respawning...`);
+          triggerAnnouncer("WRECKED! Respawning...");
         }
 
         updateLeaderboardUI();
+      }
+
+      startWeaponRoll() {
+        if (!this.canCollectWeapon()) return;
+        this.isRollingWeapon = true;
+
+        if (!this.isBot && !this.isRemote) {
+          // Player Item Roulette Roll
+          const slot = document.getElementById("weaponSlot");
+          const iconEl = document.getElementById("weaponIcon");
+          const nameEl = document.getElementById("weaponName");
+          const hintEl = document.getElementById("weaponHint");
+          slot.classList.add("rolling-weapon");
+          nameEl.textContent = "Rolling Weapon...";
+          hintEl.textContent = "LOCKED IN ROULETTE";
+
+          let rollTicks = 0;
+          const rollInterval = setInterval(() => {
+            rollTicks++;
+            const randW = WEAPONS[WEAPON_KEYS[Math.floor(Math.random() * WEAPON_KEYS.length)]];
+            iconEl.textContent = randW.icon;
+            sound.playRouletteTick();
+
+            if (rollTicks > 10) {
+              clearInterval(rollInterval);
+              slot.classList.remove("rolling-weapon");
+              const finalKey = WEAPON_KEYS[Math.floor(Math.random() * WEAPON_KEYS.length)];
+              this.giveWeapon(finalKey);
+            }
+          }, 70);
+        } else {
+          // Bot Roll
+          setTimeout(() => {
+            if (!this.isDead) {
+              const finalKey = WEAPON_KEYS[Math.floor(Math.random() * WEAPON_KEYS.length)];
+              this.giveWeapon(finalKey);
+            }
+          }, 700);
+        }
       }
 
       giveWeapon(weaponKey) {
@@ -1953,6 +2217,7 @@
         if (!weaponDef) return;
         this.currentWeapon = weaponDef;
         this.weaponAmmo = weaponDef.ammo;
+        this.isRollingWeapon = false;
 
         if (!this.isBot && !this.isRemote) {
           sound.playPickup();
@@ -1962,6 +2227,12 @@
 
       fireWeapon() {
         if (this.isDead || !this.currentWeapon || this.weaponAmmo <= 0 || this.weaponCooldown > 0) return;
+
+        // RULE: Firing drops spawn shield immediately!
+        if (this.invulnerableTimer > 0) {
+          this.invulnerableTimer = 0;
+          if (this.meshData.shield) this.meshData.shield.visible = false;
+        }
 
         const forward = new THREE.Vector3(Math.sin(this.heading), 0, Math.cos(this.heading)).normalize();
         const spawnPos = this.group.position.clone().addScaledVector(forward, 2.8);
@@ -2000,6 +2271,7 @@
           });
         }
 
+        // Exhausted weapon: clears slot so new mystery box can be picked up
         if (this.weaponAmmo <= 0) {
           this.currentWeapon = null;
         }
@@ -2016,7 +2288,6 @@
           return;
         }
 
-        // Remote Smooth Interpolation
         if (this.isRemote) {
           this.group.position.lerp(this.targetPos, 0.25);
           let diff = this.targetHeading - this.heading;
@@ -2070,9 +2341,7 @@
         this.isDrifting = !!input.drift;
         if (this.isDrifting && Math.abs(this.speed) > 12) {
           this.driftTime += dt;
-          if (Math.random() < 0.4) {
-            spawnSmokePuff(this.group.position.x, 0.4, this.group.position.z, 0x94a3b8);
-          }
+          if (Math.random() < 0.4) spawnSmokePuff(this.group.position.x, 0.4, this.group.position.z, 0x94a3b8);
         } else {
           if (this.driftTime > 1.2) {
             this.speed += 12;
@@ -2100,6 +2369,17 @@
             this.speed = 46;
             sound.playTurbo();
             spawnExplosionParticles(this.group.position.x, 0.6, this.group.position.z, 0x06b6d4, 8);
+          }
+        });
+
+        // Lava Hazard Pools Check
+        hazardZones.forEach(hz => {
+          if (Math.hypot(this.group.position.x - hz.x, this.group.position.z - hz.z) < hz.radius) {
+            this.takeDamage(15 * dt, null);
+            this.speed *= 0.85; // Molten lava slows down
+            if (Math.random() < 0.3) {
+              spawnExplosionParticles(this.group.position.x, 0.5, this.group.position.z, 0xff4500, 2);
+            }
           }
         });
 
@@ -2348,7 +2628,7 @@
     }
 
     /* ==========================================================================
-       MULTIPLAYER NETWORKING ENGINE (WebSocket Client + Ping + Room Sync)
+       MULTIPLAYER NETWORKING ENGINE
        ========================================================================== */
     class NetworkClient {
       constructor() {
@@ -2433,6 +2713,11 @@
             document.getElementById("mpJoinInputForm").classList.add("hidden");
             document.getElementById("mpActiveRoom").classList.remove("hidden");
             this.updateLobbyPlayersUI(msg.players);
+            if (msg.mapId) loadMap(msg.mapId);
+            break;
+
+          case "MAP_CHANGED":
+            loadMap(msg.mapId);
             break;
 
           case "PLAYER_JOINED":
@@ -2440,11 +2725,11 @@
             break;
 
           case "MATCH_START":
+            if (msg.mapId) loadMap(msg.mapId);
             startMatchFromNetwork(msg.timer);
             break;
 
           case "WORLD_TICK":
-            // Sync positions of remote players
             msg.players.forEach(pData => {
               if (pData.id !== this.clientId) {
                 let remote = combatants.find(c => c.id === pData.id);
@@ -2552,7 +2837,8 @@
       const input = { throttle: 1, steer: 0, drift: false };
       let targetPos = null;
 
-      if (!bot.currentWeapon) {
+      // RULE: Bot only searches for Mystery Box if it does NOT have a weapon
+      if (bot.canCollectWeapon()) {
         let nearestBox = null, minBoxDist = Infinity;
         for (const b of mysteryBoxes) {
           if (b.active) {
@@ -2563,6 +2849,7 @@
         if (nearestBox) targetPos = new THREE.Vector3(nearestBox.x, 0, nearestBox.z);
       }
 
+      // If armed or no box nearby: Hunt enemies!
       if (!targetPos) {
         let nearestEnemy = null, minEnemyDist = Infinity;
         for (const other of combatants) {
@@ -2585,6 +2872,7 @@
       input.steer = THREE.MathUtils.clamp(angleDiff * 1.5, -1, 1);
       if (Math.abs(angleDiff) > 0.8) input.drift = true;
 
+      // Attack if weapon ready
       if (bot.currentWeapon) {
         const dist = bot.group.position.distanceTo(targetPos);
         if (Math.abs(angleDiff) < 0.35 && dist < 38) bot.fireWeapon();
@@ -2595,25 +2883,28 @@
     }
 
     /* ==========================================================================
-       INTERACTION ENGINE (Mystery Box Collisions & Ramming)
+       INTERACTION ENGINE WITH SMASH KARTS STRICT RULES
        ========================================================================== */
     function checkArenaInteractions() {
       combatants.forEach(c => {
         if (c.isDead) return;
 
-        mysteryBoxes.forEach(box => {
-          if (box.active && Math.hypot(c.group.position.x - box.x, c.group.position.z - box.z) < 2.8) {
-            box.active = false;
-            box.group.visible = false;
-            box.respawnTimer = 7.5;
+        // SMASH KARTS RULE: Only collect if kart currently has NO weapon!
+        if (c.canCollectWeapon()) {
+          mysteryBoxes.forEach(box => {
+            if (box.active && Math.hypot(c.group.position.x - box.x, c.group.position.z - box.z) < 2.8) {
+              box.active = false;
+              box.group.visible = false;
+              box.respawnTimer = 7.5;
 
-            const randWeapon = WEAPON_KEYS[Math.floor(Math.random() * WEAPON_KEYS.length)];
-            c.giveWeapon(randWeapon);
-            spawnExplosionParticles(box.x, 1.8, box.z, 0xf59e0b, 16);
-          }
-        });
+              spawnExplosionParticles(box.x, 1.8, box.z, 0xf59e0b, 16);
+              c.startWeaponRoll();
+            }
+          });
+        }
       });
 
+      // Kart vs Kart Ramming Collisions
       for (let i = 0; i < combatants.length; i++) {
         for (let j = i + 1; j < combatants.length; j++) {
           const a = combatants[i];
@@ -2625,6 +2916,7 @@
             a.group.position.addScaledVector(push, 0.5);
             b.group.position.addScaledVector(push, -0.5);
 
+            // Nitro Star Overdrive Ramming SMASH
             if (a.nitroTimer > 0 && b.nitroTimer <= 0) b.takeDamage(100, a);
             else if (b.nitroTimer > 0 && a.nitroTimer <= 0) a.takeDamage(100, b);
             else { a.speed *= 0.7; b.speed *= 0.7; }
@@ -2652,6 +2944,14 @@
       const scale = (w - 12) / ARENA_SIZE;
       const cx = w / 2;
       const cy = h / 2;
+
+      // Hazard pools on radar
+      rCtx.fillStyle = "rgba(239, 68, 68, 0.5)";
+      hazardZones.forEach(hz => {
+        rCtx.beginPath();
+        rCtx.arc(cx + hz.x * scale, cy + hz.z * scale, hz.radius * scale, 0, Math.PI * 2);
+        rCtx.fill();
+      });
 
       rCtx.fillStyle = "#f59e0b";
       mysteryBoxes.forEach(b => {
@@ -2712,6 +3012,7 @@
       }, 4000);
     }
 
+    let firstBlood = true;
     function triggerAnnouncer(text) {
       const el = document.getElementById("announcerBanner");
       el.textContent = text;
@@ -2732,11 +3033,15 @@
       sound.init();
       gameState = "playing";
       matchTimeRemaining = MATCH_DURATION;
+      firstBlood = true;
 
       document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
       document.getElementById("hud").classList.remove("hidden");
 
-      // Apply latest customizations to player
+      // Load selected map
+      loadMap(config.data.selectedMap || "stadium");
+
+      // Apply customizations
       player.name = config.data.username;
       player.color = config.data.color;
       scene.remove(player.group);
@@ -2748,6 +3053,7 @@
         c.smashes = 0;
         c.deaths = 0;
         c.score = 0;
+        c.killStreak = 0;
         c.respawn();
       });
 
@@ -2759,6 +3065,7 @@
       sound.init();
       gameState = "playing";
       matchTimeRemaining = serverDuration || MATCH_DURATION;
+      firstBlood = true;
 
       document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
       document.getElementById("hud").classList.remove("hidden");
@@ -2796,8 +3103,17 @@
       `;
     }
 
+    // Auto Map Rotation on Rematch
+    function rotateToNextMap() {
+      const idx = MAP_KEYS.indexOf(config.data.selectedMap);
+      const nextIdx = (idx + 1) % MAP_KEYS.length;
+      config.data.selectedMap = MAP_KEYS[nextIdx];
+      config.save();
+      updateMapUISelections();
+    }
+
     /* ==========================================================================
-       USER INPUT HANDLING (Keyboard, Touch & Keybindings)
+       USER INPUT HANDLING
        ========================================================================== */
     const keys = {};
 
@@ -2805,7 +3121,6 @@
       if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) e.preventDefault();
       keys[e.code] = true;
 
-      // Key rebind listening
       if (rebindAction) {
         config.data.keybindings[rebindAction] = e.code;
         config.save();
@@ -2840,7 +3155,6 @@
       });
     });
 
-    // Mobile Virtual Touch Setup
     function setupTouch(id, code) {
       const el = document.getElementById(id);
       if (!el) return;
@@ -2873,7 +3187,10 @@
     });
 
     document.getElementById("quickPlayBtn").addEventListener("click", startLocalMatch);
-    document.getElementById("rematchBtn").addEventListener("click", startLocalMatch);
+    document.getElementById("rematchBtn").addEventListener("click", () => {
+      rotateToNextMap();
+      startLocalMatch();
+    });
     document.getElementById("returnMenuBtn").addEventListener("click", () => {
       document.querySelectorAll(".overlay").forEach(o => o.classList.add("hidden"));
       menuOverlay.classList.remove("hidden");
@@ -2899,7 +3216,34 @@
       });
     });
 
-    // Customization Chips (Garage)
+    // Map Selectors in Menu & Lobby
+    function updateMapUISelections() {
+      const cur = config.data.selectedMap || "stadium";
+      document.querySelectorAll(".map-card").forEach(c => {
+        if (c.getAttribute("data-map") === cur) c.classList.add("active");
+        else c.classList.remove("active");
+      });
+      const name = MAP_CONFIGS[cur] ? MAP_CONFIGS[cur].name : "Neon Stadium";
+      document.getElementById("selectedMapLabel").textContent = name;
+      document.getElementById("mpMapLabel").textContent = name;
+    }
+
+    document.querySelectorAll(".map-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const mapKey = card.getAttribute("data-map");
+        config.data.selectedMap = mapKey;
+        config.save();
+        updateMapUISelections();
+
+        if (net.ws && net.ws.readyState === WebSocket.OPEN && net.isHost) {
+          net.send({ type: "CHANGE_MAP", mapId: mapKey });
+        }
+      });
+    });
+
+    updateMapUISelections();
+
+    // Garage Customization Chips
     function setupChips(containerId, configKey) {
       document.querySelectorAll(`#${containerId} .chip-btn`).forEach(chip => {
         chip.addEventListener("click", () => {
@@ -2928,6 +3272,7 @@
     document.getElementById("createRoomBtn").addEventListener("click", () => {
       net.send({
         type: "CREATE_ROOM",
+        mapId: config.data.selectedMap || "stadium",
         playerData: {
           name: config.data.username,
           color: config.data.color,
@@ -3066,7 +3411,7 @@
         player.updatePhysics(dt, playerInput);
         sound.setEngineSpeed(player.speed / player.maxSpeed);
 
-        // Send local player position to multiplayer server
+        // Sync with server
         if (net.ws && net.ws.readyState === WebSocket.OPEN) {
           net.send({
             type: "UPDATE_POSITION",
@@ -3081,7 +3426,7 @@
           });
         }
 
-        // Update AI Bots
+        // AI Bots & Remote Players
         for (let i = 1; i < combatants.length; i++) {
           if (combatants[i].isBot) updateBotAI(combatants[i], dt);
           else if (combatants[i].isRemote) combatants[i].updatePhysics(dt, {});
@@ -3132,7 +3477,7 @@
 
         renderRadar();
 
-        // Camera Follow Logic (Customizable Modes)
+        // Camera Follow Logic
         if (!player.isDead) {
           const forward = new THREE.Vector3(Math.sin(player.heading), 0, Math.cos(player.heading));
           let desiredCamPos;
@@ -3146,7 +3491,6 @@
             camera.position.lerp(desiredCamPos, 0.1);
             camera.lookAt(player.group.position);
           } else {
-            // Chase Cam (Close / Far)
             const distBack = config.data.cameraMode === "chase_far" ? -14 : -10;
             const heightUp = config.data.cameraMode === "chase_far" ? 7.2 : 5.4;
             desiredCamPos = player.group.position.clone().addScaledVector(forward, distBack).add(new THREE.Vector3(0, heightUp, 0));
@@ -3163,7 +3507,6 @@
           }
         }
       } else {
-        // Menu Orbit Camera
         const t = performance.now() * 0.0002;
         camera.position.set(Math.sin(t) * 75, 42, Math.cos(t) * 75);
         camera.lookAt(0, 0, 0);

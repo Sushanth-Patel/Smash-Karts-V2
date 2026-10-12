@@ -16,6 +16,7 @@ const server = http.createServer((req, res) => {
       code,
       players: r.players.size,
       maxPlayers: r.maxPlayers,
+      mapId: r.mapId,
       inGame: r.inGame
     }));
     return res.end(JSON.stringify({ status: "online", activeRooms: rooms.size, rooms: roomSummaries }));
@@ -59,11 +60,12 @@ function generateRoomCode() {
 }
 
 class Room {
-  constructor(code, hostId, maxPlayers = 6, matchDuration = 120) {
+  constructor(code, hostId, maxPlayers = 6, matchDuration = 120, mapId = "stadium") {
     this.code = code;
     this.hostId = hostId;
     this.maxPlayers = maxPlayers;
     this.matchDuration = matchDuration;
+    this.mapId = mapId;
     this.timer = matchDuration;
     this.inGame = false;
     this.players = new Map(); // id -> client
@@ -72,7 +74,7 @@ class Room {
   }
 
   initMysteryBoxes() {
-    const coords = [
+    return [
       { id: 0, x: -16, z: -16, active: true },
       { id: 1, x: 16, z: -16, active: true },
       { id: 2, x: -16, z: 16, active: true },
@@ -82,7 +84,6 @@ class Room {
       { id: 6, x: -44, z: 35, active: true },
       { id: 7, x: 44, z: 35, active: true }
     ];
-    return coords;
   }
 
   broadcast(message, excludeId = null) {
@@ -109,6 +110,7 @@ class Room {
     this.broadcast({
       type: "MATCH_START",
       timer: this.timer,
+      mapId: this.mapId,
       mysteryBoxes: this.mysteryBoxes
     });
 
@@ -221,7 +223,7 @@ wss.on("connection", (ws) => {
           if (rooms.has(code)) {
             code = generateRoomCode();
           }
-          const room = new Room(code, clientId, msg.maxPlayers || 6, msg.matchDuration || 120);
+          const room = new Room(code, clientId, msg.maxPlayers || 6, msg.matchDuration || 120, msg.mapId || "stadium");
           rooms.set(code, room);
           currentRoom = room;
 
@@ -232,9 +234,21 @@ wss.on("connection", (ws) => {
             type: "ROOM_JOINED",
             roomCode: code,
             isHost: true,
+            mapId: room.mapId,
             maxPlayers: room.maxPlayers,
             players: Array.from(room.players.values()).map(p => ({ id: p.id, name: p.name, color: p.color }))
           }));
+          break;
+        }
+
+        case "CHANGE_MAP": {
+          if (currentRoom && currentRoom.hostId === clientId) {
+            currentRoom.mapId = msg.mapId || "stadium";
+            currentRoom.broadcast({
+              type: "MAP_CHANGED",
+              mapId: currentRoom.mapId
+            });
+          }
           break;
         }
 
@@ -256,6 +270,7 @@ wss.on("connection", (ws) => {
             type: "ROOM_JOINED",
             roomCode: code,
             isHost: room.hostId === clientId,
+            mapId: room.mapId,
             maxPlayers: room.maxPlayers,
             players: Array.from(room.players.values()).map(p => ({ id: p.id, name: p.name, color: p.color }))
           }));
