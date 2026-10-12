@@ -58,3 +58,28 @@ Visit **`http://localhost:3000`** in multiple browser tabs or invite friends on 
 - **Keybinding Remapper**: Remap Accelerate, Brake, Steer, Fire, and Drift to any key.
 - **Mobile Touch Controls**: On-screen virtual buttons for mobile and touch devices.
 - **Settings Persistence**: All customization choices, settings, and player stats are saved to `localStorage`.
+
+---
+
+## ☁️ Deployment Guide: Render vs Vercel vs Netlify
+
+| Platform | Suitable for Multiplayer? | Why? |
+| :--- | :---: | :--- |
+| **Render** | **YES (Recommended)** | Runs persistent Node.js Web Services with continuous WebSocket (`ws://`/`wss://`) support, 20Hz ticks, and in-memory rooms. Free tier available. |
+| **Vercel** | Frontend Only | Serverless platform; terminates requests after 10-15s and does not support persistent stateful WebSockets for real-time gaming. |
+| **Netlify** | Frontend Only | Serverless platform; does not support long-lived persistent WebSocket connections. |
+
+### Deploy to Render (Recommended - Free)
+
+1. Push your repository to GitHub: `https://github.com/Sushanth-Patel/Smash-Karts-V2`.
+2. Go to [Render.com](https://render.com) and click **New +** -> **Web Service**.
+3. Select your repository `Smash-Karts-V2`.
+4. Render will auto-detect the configuration from `render.yaml`:
+   - **Environment**: `Node`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
+5. Click **Create Web Service**.
+6. Once deployed, Render provides a free live HTTPS URL (e.g. `https://smash-karts-v2.onrender.com`).
+   - The game and WebSocket server will run automatically at that URL!
+   - Share the URL with friends to play anywhere!
+
