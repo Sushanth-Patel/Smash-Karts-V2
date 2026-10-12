@@ -1,76 +1,108 @@
-# Turbo Smash Karts 3D 🏎️💥
+# Turbo Smash Karts 3D
 
-A production-ready 3D multiplayer kart battle arena game inspired by [Smash Karts](https://www.smashkarts.io/), built with **Three.js**, **Web Audio API**, and **WebSocket**.
+Real-time 3D kart combat for the browser, built with Three.js, Node.js, and WebSocket. Race, collect power-ups, and battle other players in a fast arena game with offline AI support.
 
----
+[![Repository](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/Sushanth-Patel/Smash-Karts-V2)
 
-## 🚀 Quick Start
+## Overview
 
-### 1. Standalone Singleplayer & Local Mode
-Open `index.html` directly in any modern web browser. You can immediately jump into battle with intelligent AI bots.
+Turbo Smash Karts 3D supports both solo play and real-time multiplayer. The browser runs the Three.js game client while the Node.js server hosts rooms and synchronizes multiplayer state over WebSocket.
 
-### 2. Real-Time Online / Local Multiplayer
-To host rooms and play with multiple real players:
+## Features
+
+### Combat
+
+- Collect rotating mystery boxes and randomized power-ups.
+- Use homing rockets, gatling guns, spike mines, cannon bombs, and nitro.
+- Track health, damage, eliminations, respawns, and temporary protection shields.
+
+### Multiplayer
+
+- Create or join a room with a short room code.
+- Synchronize kart movement, rotation, weapons, health, and match timers.
+- Interpolate remote players for smoother movement.
+- Fall back to AI bots when playing solo or offline.
+
+### Customization
+
+- Choose from four kart chassis.
+- Equip driver hats, wheel styles, and exhaust trails.
+- Select a paint color and player nickname.
+
+### Settings and controls
+
+- Low, Medium, High, and Ultra graphics presets.
+- Dynamic shadows and resolution scaling.
+- Chase, cockpit, and top-down camera views.
+- Adjustable field of view and audio mixer controls.
+- Remappable keyboard bindings.
+- Touch controls for mobile devices.
+- Persistent settings and player stats stored in `localStorage`.
+
+## Requirements
+
+- Node.js 18 or newer
+- npm
+- A modern browser with WebGL and WebSocket support
+
+## Run locally
+
+Clone the repository and install dependencies:
 
 ```bash
-# 1. Install dependencies
+git clone https://github.com/Sushanth-Patel/Smash-Karts-V2.git
+cd Smash-Karts-V2
 npm install
+```
 
-# 2. Start the WebSocket and HTTP server
+Start the game server:
+
+```bash
 npm start
 ```
 
-Visit **`http://localhost:3000`** in multiple browser tabs or invite friends on your local network.
+Open [http://localhost:3000](http://localhost:3000) in a browser. Open the URL in additional tabs or on other devices connected to the same network to test multiplayer.
 
----
+The game can also be opened directly from `index.html` for solo play, but running the server is required for room-based multiplayer.
 
-## 🎮 Game Features
+## Deployment
 
-### 💥 Signature Smash Karts Combat
-- **Mystery Boxes (`?` Box)**: Floating rotating question mark boxes scattered around the arena that drop randomized power-ups with live respawn countdowns.
-- **Weapon Arsenal**:
-  - 🚀 **Homing Rocket**: Target-tracking missile with smoke exhaust and fireball blast.
-  - 🔫 **Gatling Gun**: Rapid-fire kinetic bullet burst.
-  - 💣 **Spike Mine**: Deployable proximity trap with a flashing LED beacon.
-  - ⭐ **Invincible Nitro**: Blazing speed boost and invulnerability shield that instantly smashes opponents upon ramming.
-  - 🏐 **Cannon Bomb**: Bouncing explosive cannonball that ricochets off arena walls.
-- **Health & Smash System**: 100 HP per kart, overhead damage flashes, live killfeed, and respawn protection shields.
+### Render
 
-### 🌐 Production Multiplayer
-- **Multi-Room Lobby**: Host creates a unique 5-letter Room Code (e.g. `TURBO`); guests join using the code.
-- **Authoritative Sync**: 20Hz state tick synchronizing positions, headings, weapon firing, health, and match timer.
-- **Client Interpolation**: Smooth linear position lerping and slerp rotation for remote karts to eliminate rubberbanding.
-- **Offline / Local AI Fallback**: If offline or playing solo, intelligent AI bots automatically populate the arena.
+Render is the recommended deployment target because the game server needs a long-running Node.js process for WebSocket connections.
 
-### 🚗 Customization Garage
-- **4 Kart Chassis**: Standard Racer, Speedster F1, Buggy Beast, and Cyber Cruiser.
-- **8 Driver Hats**: Crown 👑, Horns 😈, Cap 🧢, Propeller 🚁, Police 👮, Chef 👨‍🍳, Mohawk 🎸, and Angel Halo 😇.
-- **4 Wheel Styles**: Classic Slicks, Offroad Spikes, Cyber Neon, and Gold Alloys.
-- **4 Exhaust Trails**: Nitro Fire, Cyan Plasma, Rainbow Stars, and Smoke.
-- **Vibrant Paint Finish**: 8 color swatches + custom nickname tag.
+1. Create a new Web Service on [Render](https://render.com).
+2. Connect the `Sushanth-Patel/Smash-Karts-V2` repository.
+3. Use the included `render.yaml`, or set:
+   - **Build command:** `npm install`
+   - **Start command:** `npm start`
+   - **Environment:** `Node`
+4. Deploy and open the HTTPS URL provided by Render.
 
-### ⚙️ Full Settings Suite
-- **Graphics Quality Presets**: Low, Medium, High, Ultra.
-- **Dynamic Shadows & Resolution Scaling**: 0.8x, 1.0x, 1.5x.
-- **Camera Views**: Chase (Close), Chase (Far), Cockpit / First Person, and Top-Down Drone.
-- **Field of View (FOV)**: 60° to 95° slider.
-- **Audio Mixer**: Separate Master Volume and Engine Rumble sliders.
-- **Keybinding Remapper**: Remap Accelerate, Brake, Steer, Fire, and Drift to any key.
-- **Mobile Touch Controls**: On-screen virtual buttons for mobile and touch devices.
-- **Settings Persistence**: All customization choices, settings, and player stats are saved to `localStorage`.
+### Frontend-only hosting
 
----
+Static hosts such as Netlify and Vercel can serve the browser client, but they do not host the persistent WebSocket server required for real-time multiplayer. Use them only when the client is configured to connect to a separately deployed Node.js server.
 
-## ☁️ Deployment Guide: Render vs Vercel vs Netlify
+## Project structure
 
-| Platform | Suitable for Multiplayer? | Why? |
-| :--- | :---: | :--- |
-| **Render** | **YES (Recommended)** | Runs persistent Node.js Web Services with continuous WebSocket (`ws://`/`wss://`) support, 20Hz ticks, and in-memory rooms. Free tier available. |
-| **Vercel** | Frontend Only | Serverless platform; terminates requests after 10-15s and does not support persistent stateful WebSockets for real-time gaming. |
-| **Netlify** | Frontend Only | Serverless platform; does not support long-lived persistent WebSocket connections. |
+```text
+.
+├── index.html       # Three.js game client and interface
+├── server.js        # HTTP server and WebSocket multiplayer server
+├── package.json     # Scripts and dependencies
+├── render.yaml      # Render deployment configuration
+├── netlify.toml     # Static hosting configuration
+└── vercel.json      # Vercel configuration
+```
 
-### Live MVP Link
-https://turbo-kart-7e0n.onrender.com/
+## Available scripts
 
+| Command | Description |
+| --- | --- |
+| `npm start` | Start the HTTP and WebSocket server |
+| `npm run server` | Alias for `npm start` |
+| `npm run dev` | Start the development server |
 
+## License
 
+The project is released under the MIT License, as declared in `package.json`.
