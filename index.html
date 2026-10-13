@@ -6552,8 +6552,13 @@
         const saved = localStorage.getItem("kart_server_url");
         if (saved && saved.trim()) return saved.trim();
 
-        const isFile = window.location.protocol === "file:" || !window.location.host;
-        if (isFile) {
+        const isStaticHost =
+          window.location.protocol === "file:" ||
+          !window.location.host ||
+          window.location.hostname.endsWith("github.io") ||
+          window.location.hostname.endsWith("netlify.app") ||
+          window.location.hostname.endsWith("vercel.app");
+        if (isStaticHost) {
           return "wss://turbo-kart-7e0n.onrender.com";
         }
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
